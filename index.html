@@ -15,15 +15,15 @@ body{
   background:black;
 }
 
-/* VIDEO */
+/* VIDEO (🔥 ÚNICA ALTERAÇÃO AQUI) */
 #bgVideo{
   position:fixed;
-  top:0;
-  left:0;
-  width:100vw;
-  height:100vh;
+  top:50%;
+  left:50%;
+  width:100%;
+  height:100%;
   object-fit:cover;
-  transform:scale(0.9);
+  transform:translate(-50%, -50%) scale(0.75); /* 🔥 AFASTA O VÍDEO */
   z-index:-2;
   filter:brightness(0.4);
 }
@@ -90,7 +90,7 @@ body{
   animation: flutuar 3s infinite ease-in-out, pulseGlow 2s infinite alternate;
 }
 
-/* 🔥 FOGO PARTÍCULAS */
+/* FOGO */
 #fire{
   position:absolute;
   top:20%;
@@ -113,14 +113,8 @@ body{
 }
 
 @keyframes subir{
-  0%{
-    transform:translateY(0) scale(1);
-    opacity:1;
-  }
-  100%{
-    transform:translateY(-180px) scale(0.2);
-    opacity:0;
-  }
+  0%{ transform:translateY(0) scale(1); opacity:1; }
+  100%{ transform:translateY(-180px) scale(0.2); opacity:0; }
 }
 
 /* CONTAINER */
@@ -201,10 +195,8 @@ body{
   <div id="subTitulo">Fatal Guilds</div>
 </div>
 
-<!-- 🔥 FOGO PARTÍCULAS -->
 <div id="fire"></div>
 
-<!-- LOGO -->
 <div id="logoMain">
   <img src="logo1.jpg">
 </div>
@@ -241,14 +233,12 @@ body{
 </div>
 
 <script>
-// 🔊 SOM
 document.body.addEventListener("click", ()=>{
   const video = document.getElementById("bgVideo");
   video.muted = false;
   video.play();
 });
 
-// 🔥 GERAR PARTÍCULAS DE FOGO
 const fire = document.getElementById("fire");
 
 setInterval(()=>{
@@ -256,7 +246,6 @@ setInterval(()=>{
   p.className = "fireParticle";
   p.style.left = Math.random()*260 + "px";
   fire.appendChild(p);
-
   setTimeout(()=>{ p.remove(); },2000);
 },100);
 </script>
