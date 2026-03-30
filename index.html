@@ -6,6 +6,11 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
 
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
 <style>
 body{
   margin:0;
@@ -22,171 +27,66 @@ body{
   width:100%;
   height:100%;
   object-fit:cover;
-  transform:translate(-50%, -50%) scale(0.75);
+  transform:translate(-50%,-50%) scale(0.75);
   z-index:-2;
-  filter:brightness(0.4);
+  filter:brightness(0.7) contrast(1.2);
 }
 
-#tituloCentral{
-  position:absolute;
-  top:10%;
-  left:50%;
-  transform:translateX(-50%);
-}
-
-#tituloCentral h1{
-  margin:0;
-  font-size:44px;
-  font-family:'Cinzel', serif;
-  letter-spacing:3px;
-  text-transform:uppercase;
-  color:#8b0000;
-
-  text-shadow:
-    2px 2px 0 #000,
-    4px 4px 0 #220000,
-    6px 6px 0 #440000,
-    8px 8px 10px black;
-
-  animation: glowDark 2s infinite alternate;
-}
-
-#subTitulo{
-  margin-top:5px;
-  font-size:18px;
-  color:#ccc;
-  letter-spacing:2px;
-  font-family:'Cinzel', serif;
-  text-shadow:0 0 15px red;
-}
-
-#logoMain{
-  position:absolute;
-  top:22%;
-  left:50%;
-  transform:translateX(-50%);
-}
-
-#logoMain img{
-  width:220px;
-  max-width:80%;
-  filter:drop-shadow(0 0 25px red);
-  animation: flutuar 3s infinite ease-in-out, pulseGlow 2s infinite alternate;
-}
-
-#fire{
-  position:absolute;
-  top:20%;
-  left:50%;
-  transform:translateX(-50%);
-  width:260px;
-  height:200px;
-  pointer-events:none;
-}
-
-.fireParticle{
-  position:absolute;
-  bottom:0;
-  width:6px;
-  height:6px;
-  background:orange;
-  border-radius:50%;
-  opacity:0.8;
-  animation: subir 2s linear infinite;
-}
-
-@keyframes subir{
-  0%{ transform:translateY(0) scale(1); opacity:1; }
-  100%{ transform:translateY(-180px) scale(0.2); opacity:0; }
+body::after{
+  content:"";
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(255,0,0,0.08);
+  z-index:-1;
 }
 
 #container{
   position:absolute;
   top:55%;
   left:50%;
-  transform:translate(-50%, -50%);
+  transform:translate(-50%,-50%);
   width:90%;
   max-width:350px;
 }
 
-#logoFundo{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%, -50%);
-  z-index:-1;
-}
-
-#logoFundo img{
-  width:300px;
-  opacity:0.08;
-  filter:blur(1px);
-}
-
 .box{
-  background:rgba(0,0,0,0.85);
+  background:rgba(20,0,0,0.75);
   border:1px solid red;
   margin:10px;
   padding:15px;
+  box-shadow:0 0 15px red;
 }
 
-/* 🔥 NOVO ESTILO INPUT */
 input{
   width:90%;
   padding:8px;
-  background:#111;
+  background:#1a0000;
   border:1px solid red;
   color:white;
-  outline:none;
-}
-
-input:focus{
-  box-shadow:0 0 10px red;
+  box-shadow:0 0 5px red;
 }
 
 .btnMU{
   padding:10px;
-  background:linear-gradient(45deg,#3a0000,#a00000);
+  background:linear-gradient(45deg,#5a0000,#ff0000);
   border:none;
   color:white;
   margin-top:5px;
   width:100%;
-  cursor:pointer;
+  box-shadow:0 0 10px red;
   transition:0.2s;
 }
 
 .btnMU:hover{
-  transform:scale(1.08);
+  transform:scale(1.05);
   box-shadow:0 0 20px red;
 }
 
-.btnMU:active{
-  transform:scale(0.95);
-  box-shadow:0 0 40px orange;
-}
-
-@keyframes flutuar{
-  0%{ transform:translate(-50%,0px);}
-  50%{ transform:translate(-50%,10px);}
-  100%{ transform:translate(-50%,0px);}
-}
-
-@keyframes glowDark{
-  from{ text-shadow:2px 2px 0 #000, 4px 4px 0 #220000, 6px 6px 0 #440000, 0 0 10px red;}
-  to{ text-shadow:2px 2px 0 #000, 4px 4px 0 #330000, 6px 6px 0 #660000, 0 0 25px red;}
-}
-
-@keyframes pulseGlow{
-  from{ filter:drop-shadow(0 0 15px red);}
-  to{ filter:drop-shadow(0 0 35px red);}
-}
-
-@keyframes tremer{
-  0%{transform:translate(0)}
-  25%{transform:translate(-5px,5px)}
-  50%{transform:translate(5px,-5px)}
-  75%{transform:translate(-5px,5px)}
-  100%{transform:translate(0)}
+h1, h3{
+  text-shadow:0 0 10px red;
 }
 </style>
 </head>
@@ -210,155 +110,216 @@ input:focus{
 
 <div id="container">
 
-  <div id="logoFundo">
-    <img src="logo2.png">
-  </div>
-
   <div class="box">
     <h3>Conta</h3>
-    <input placeholder="Email"><br><br>
-    <input type="password" placeholder="Senha"><br><br>
-    <button class="btnMU">Cadastrar</button>
-    <button class="btnMU">Entrar</button>
+
+    <input id="email" placeholder="Email"><br><br>
+    <input id="senha" type="password" placeholder="Senha"><br><br>
+
+    <button class="btnMU" onclick="registrar()">Cadastrar</button>
+    <button class="btnMU" onclick="login()">Entrar</button>
+    <button class="btnMU" onclick="virarAdminSeguro()">Virar Líder 👑</button>
   </div>
 
   <div class="box">
-    <input placeholder="Nick"><br><br>
-    <input placeholder="Classe"><br><br>
-    <input placeholder="Resets"><br><br>
-    <button class="btnMU">Cadastrar personagem</button>
+    <input id="nick" placeholder="Nick"><br><br>
+    <input id="classe" placeholder="Classe"><br><br>
+    <input id="resets" placeholder="Resets"><br><br>
+    <button class="btnMU" onclick="criarPersonagem()">Cadastrar personagem</button>
   </div>
 
-  <div class="box"><h3>🏆 Ranking</h3></div>
-  <div class="box"><h3>📜 Membros</h3></div>
+  <div class="box" id="rankingBox"><h3>🏆 Ranking</h3></div>
+  <div class="box" id="membrosBox"><h3>📜 Membros</h3></div>
+
+  <div class="box">
+    <h3>💬 Chat da Guild</h3>
+    <div id="chatBox" style="height:150px;overflow:auto;text-align:left;"></div>
+    <input id="msg" placeholder="Digite mensagem...">
+    <button class="btnMU" onclick="enviarMsg()">Enviar</button>
+  </div>
 
 </div>
 
 <script>
-const API = "https://fatalguild-api.onrender.com";
-
-const inputs = document.querySelectorAll("input");
-const botoes = document.querySelectorAll(".btnMU");
-
-// CADASTRO
-botoes[0].onclick = async () => {
-  try{
-    const res = await fetch(API+"/register",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        email:inputs[0].value,
-        senha:inputs[1].value
-      })
-    });
-
-    const data = await res.json();
-    console.log("REGISTER:", data);
-
-    if(data.erro){
-      alert(data.erro);
-    }else{
-      tremerTela();
-      alert("Conta criada!");
-    }
-  }catch(e){
-    alert("Erro na API!");
-  }
+const firebaseConfig = {
+  apiKey: "AIzaSyBUPcIonbLaTWv6SnhbZghlU51Tx6MT0z8",
+  authDomain: "fatal-guild.firebaseapp.com",
+  projectId: "fatal-guild"
 };
 
-// LOGIN 🔥 CORRIGIDO
-botoes[1].onclick = async () => {
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+let usuarioAtual = null;
+let meuCargo = null;
+
+async function registrar(){
   try{
-    const res = await fetch(API+"/login",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        email:inputs[0].value,
-        senha:inputs[1].value
-      })
+    const email = document.getElementById("email").value;
+    const senha = document.getElementById("senha").value;
+
+    const cred = await auth.createUserWithEmailAndPassword(email, senha);
+
+    await cred.user.sendEmailVerification();
+
+    await db.collection("usuarios").doc(cred.user.uid).set({
+      email,
+      cargo:"Membro"
     });
 
-    const data = await res.json();
-    console.log("LOGIN:", data);
+    alert("Conta criada! Verifique o email 🔥");
+  }catch(e){ alert(e.message); }
+}
 
-    if(data && (data.ok || data.user || !data.erro)){
-      tremerTela();
-      alert("🔥 BEM-VINDO 🔥");
-    }else{
-      alert(data.erro || "Erro no login");
+async function login(){
+  try{
+    const email = document.getElementById("email").value;
+    const senha = document.getElementById("senha").value;
+
+    const cred = await auth.signInWithEmailAndPassword(email, senha);
+
+    if(!cred.user.emailVerified){
+      alert("Verifique seu email!");
+      return;
     }
 
-  }catch(e){
-    alert("Servidor offline ou erro!");
-  }
-};
+    usuarioAtual = cred.user;
 
-// PERSONAGEM
-botoes[2].onclick = async () => {
-  await fetch(API+"/personagem",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      nick:inputs[2].value,
-      classe:inputs[3].value,
-      resets:Number(inputs[4].value)
-    })
+    const doc = await db.collection("usuarios").doc(usuarioAtual.uid).get();
+    meuCargo = doc.exists ? doc.data().cargo : "Membro";
+
+    alert("🔥 LOGADO 🔥");
+
+    atualizarSistema();
+    carregarChat();
+  }catch(e){ alert(e.message); }
+}
+
+async function virarAdminSeguro(){
+  if(!usuarioAtual) return;
+
+  const ref = db.collection("usuarios").doc(usuarioAtual.uid);
+  const doc = await ref.get();
+
+  if(doc.exists && doc.data().cargo === "Membro"){
+    await ref.update({cargo:"Lider"});
+    meuCargo="Lider";
+    alert("Agora você é Líder 👑");
+    atualizarSistema();
+  }
+}
+
+async function criarPersonagem(){
+  if(!usuarioAtual){
+    alert("Faça login!");
+    return;
+  }
+
+  await db.collection("personagens").add({
+    uid: usuarioAtual.uid,
+    nick: document.getElementById("nick").value,
+    classe: document.getElementById("classe").value,
+    resets: Number(document.getElementById("resets").value)||0
   });
+
   atualizarSistema();
-};
+}
 
-// RANKING
 async function atualizarSistema(){
-  try{
-    const res = await fetch(API+"/ranking");
-    const lista = await res.json();
+  let rankingHTML="<h3>🏆 Ranking</h3>";
+  let membrosHTML="<h3>📜 Membros</h3>";
 
-    const rankingBox = document.querySelectorAll(".box")[2];
-    const membrosBox = document.querySelectorAll(".box")[3];
+  const ranking=await db.collection("personagens").orderBy("resets","desc").get();
 
-    let rankingHTML = "<h3>🏆 Ranking</h3>";
-    let membrosHTML = "<h3>📜 Membros</h3>";
+  ranking.forEach((doc,i)=>{
+    const p=doc.data();
+    rankingHTML+=i===0
+      ? `<p style="color:gold;">👑 ${p.nick} - ${p.resets}</p>`
+      : `<p>${p.nick} - ${p.resets}</p>`;
+  });
 
-    lista.forEach((p,i)=>{
-      rankingHTML += i===0
-        ? `<p style="color:gold;">👑 ${p.nick} - ${p.resets}</p>`
-        : `<p>${p.nick} - ${p.resets}</p>`;
+  const membros=await db.collection("usuarios").get();
 
-      membrosHTML += `<p>${p.nick} (${p.classe})</p>`;
+  membros.forEach(doc=>{
+    const u=doc.data();
+    membrosHTML+=`
+      <p>
+        ${u.email} - ${u.cargo}
+        ${meuCargo==="Lider"?`<button onclick="promover('${doc.id}')">⬆️</button>`:""}
+      </p>
+    `;
+  });
+
+  rankingBox.innerHTML=rankingHTML;
+  membrosBox.innerHTML=membrosHTML;
+}
+
+async function promover(uid){
+  if(meuCargo!=="Lider") return;
+
+  const ref=db.collection("usuarios").doc(uid);
+  const doc=await ref.get();
+  if(!doc.exists) return;
+
+  const user=doc.data();
+
+  let novo="Membro";
+  if(user.cargo==="Membro") novo="Oficial";
+  else if(user.cargo==="Oficial") novo="Lider";
+
+  await ref.update({cargo:novo});
+  atualizarSistema();
+}
+
+/* CHAT */
+function carregarChat(){
+  db.collection("chat").orderBy("time")
+  .onSnapshot(snap=>{
+    let html="";
+    snap.forEach(doc=>{
+      const m=doc.data();
+      html+=`<p><b>${m.user}:</b> ${m.texto}</p>`;
     });
+    chatBox.innerHTML=html;
+  });
+}
 
-    rankingBox.innerHTML = rankingHTML;
-    membrosBox.innerHTML = membrosHTML;
+async function enviarMsg(){
+  if(!usuarioAtual) return;
 
-  }catch(e){
-    console.log("Erro ranking");
+  await db.collection("chat").add({
+    user:usuarioAtual.email,
+    texto:document.getElementById("msg").value,
+    time:Date.now()
+  });
+
+  document.getElementById("msg").value="";
+}
+
+auth.onAuthStateChanged(async user=>{
+  if(user){
+    usuarioAtual=user;
+
+    const doc=await db.collection("usuarios").doc(user.uid).get();
+    meuCargo=doc.exists?doc.data().cargo:"Membro";
+
+    atualizarSistema();
+    carregarChat();
   }
-}
-
-function tremerTela(){
-  document.body.style.animation="tremer 0.3s";
-  setTimeout(()=>document.body.style.animation="",300);
-}
-
-document.body.addEventListener("click", ()=>{
-  const video = document.getElementById("bgVideo");
-  video.muted = false;
-  video.play();
 });
 
-// fogo
-const fire = document.getElementById("fire");
+/* 🔥 efeito */
+const fire=document.getElementById("fire");
 setInterval(()=>{
-  const p = document.createElement("div");
+  const p=document.createElement("div");
   p.className="fireParticle";
   p.style.left=Math.random()*260+"px";
   fire.appendChild(p);
   setTimeout(()=>p.remove(),2000);
 },100);
-
-setInterval(atualizarSistema,3000);
-atualizarSistema();
 </script>
 
 </body>
-                     </html>
+  </html>
