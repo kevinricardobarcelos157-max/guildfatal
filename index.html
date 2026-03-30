@@ -1,56 +1,112 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-    <title>Guild Fatal</title>
-      <style>
-          body {
-                background: #0a0a0a;
-                      color: #fff;
-                            font-family: Arial;
-                                  text-align: center;
-                                        margin: 0;
-                                            }
-
-                                                h1 {
-                                                      color: red;
-                                                            font-size: 40px;
-                                                                  margin-top: 50px;
-                                                                        text-shadow: 0 0 10px red;
-                                                                            }
-
-                                                                                p {
-                                                                                      font-size: 18px;
-                                                                                          }
-
-                                                                                              .btn {
-                                                                                                    background: red;
-                                                                                                          color: white;
-                                                                                                                padding: 15px 30px;
-                                                                                                                      border: none;
-                                                                                                                            border-radius: 10px;
-                                                                                                                                  cursor: pointer;
-                                                                                                                                        margin-top: 20px;
-                                                                                                                                            }
-
-                                                                                                                                                .btn:hover {
-                                                                                                                                                      background: darkred;
-                                                                                                                                                          }
-                                                                                                                                                            </style>
-                                                                                                                                                            </head>
-
-                                                                                                                                                            <body>
-
-                                                                                                                                                              <h1>🔥 GUILD FATAL 🔥</h1>
-                                                                                                                                                                <p>VENHA FAZER PARTE DA MELHOR GUILD DO BRASIL</p>                                                                                                                                                                  <a href="https://wa.me/5531992229989">
-                                                                                                                                                                          <a href="https://wa.me/5531992229989">
-                                                                                                                                                                                <button>ENTRAR NA GUILD</button>
-                                                                                                                                                                                </a>
-                                                                                                                                                                              
-                                                                                                      
-                                                                                                                                                                                
-                                                                                                                                                                                
-                                                                                                                                                                        
-
-                                                                                                                                                                  </body>
-                                                                                                                                                                  </html>
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+      <meta charset="UTF-8">
+        <title>Guild Fatal</title>
+        
+          <style>
+              body {
+                    background: #0a0a0a;
+                          color: #fff;
+                                font-family: Arial;
+                                      text-align: center;
+                                            margin: 0;
+                                                }
+                                                
+                                                    h1 {
+                                                          color: red;
+                                                                font-size: 40px;
+                                                                      margin-top: 50px;
+                                                                            text-shadow: 0 0 10px red;
+                                                                                }
+                                                                                
+                                                                                    p {
+                                                                                          font-size: 18px;
+                                                                                              }
+                                                                                              
+                                                                                                  input {
+                                                                                                        padding: 10px;
+                                                                                                              border-radius: 8px;
+                                                                                                                    border: none;
+                                                                                                                          margin-top: 20px;
+                                                                                                                              }
+                                                                                                                              
+                                                                                                                                  .btn {
+                                                                                                                                        background: red;
+                                                                                                                                              color: white;
+                                                                                                                                                    padding: 15px 30px;
+                                                                                                                                                          border: none;
+                                                                                                                                                                border-radius: 10px;
+                                                                                                                                                                      cursor: pointer;
+                                                                                                                                                                            margin-top: 20px;
+                                                                                                                                                                                  display: block;
+                                                                                                                                                                                        margin-left: auto;
+                                                                                                                                                                                              margin-right: auto;
+                                                                                                                                                                                                  }
+                                                                                                                                                                                                  
+                                                                                                                                                                                                      .btn:hover {
+                                                                                                                                                                                                            background: darkred;
+                                                                                                                                                                                                                }
+                                                                                                                                                                                                                  </style>
+                                                                                                                                                                                                                  </head>
+                                                                                                                                                                                                                  
+                                                                                                                                                                                                                  <body>
+                                                                                                                                                                                                                  
+                                                                                                                                                                                                                    <h1>🔥 GUILD FATAL 🔥</h1>
+                                                                                                                                                                                                                    
+                                                                                                                                                                                                                      <p>VENHA FAZER PARTE DA MELHOR GUILD DO BRASIL</p>
+                                                                                                                                                                                                                      
+                                                                                                                                                                                                                        <!-- INPUT NOME -->
+                                                                                                                                                                                                                          <input type="text" id="nome" placeholder="Digite seu nome">
+                                                                                                                                                                                                                          
+                                                                                                                                                                                                                            <!-- BOTÃO SALVAR -->
+                                                                                                                                                                                                                              <button class="btn" onclick="salvarNome()">SALVAR NOME</button>
+                                                                                                                                                                                                                              
+                                                                                                                                                                                                                                <!-- BOTÃO WHATS -->
+                                                                                                                                                                                                                                  <a href="https://wa.me/5531992229989">
+                                                                                                                                                                                                                                      <button class="btn">ENTRAR NA GUILD</button>
+                                                                                                                                                                                                                                        </a>
+                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                          <!-- FIREBASE -->
+                                                                                                                                                                                                                                            <script type="module">
+                                                                                                                                                                                                                                                import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+                                                                                                                                                                                                                                                    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                        const firebaseConfig = {
+                                                                                                                                                                                                                                                              apiKey: "SUA_API_KEY",
+                                                                                                                                                                                                                                                                    authDomain: "SEU_PROJETO.firebaseapp.com",
+                                                                                                                                                                                                                                                                          projectId: "SEU_PROJETO",
+                                                                                                                                                                                                                                                                                storageBucket: "SEU_PROJETO.appspot.com",
+                                                                                                                                                                                                                                                                                      messagingSenderId: "SEU_ID",
+                                                                                                                                                                                                                                                                                            appId: "SEU_APP_ID"
+                                                                                                                                                                                                                                                                                                };
+                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                    const app = initializeApp(firebaseConfig);
+                                                                                                                                                                                                                                                                                                        const db = getFirestore(app);
+                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                            // FUNÇÃO SALVAR
+                                                                                                                                                                                                                                                                                                                window.salvarNome = async function() {
+                                                                                                                                                                                                                                                                                                                      const nome = document.getElementById("nome").value;
+                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                            if (nome === "") {
+                                                                                                                                                                                                                                                                                                                                    alert("Digite um nome!");
+                                                                                                                                                                                                                                                                                                                                            return;
+                                                                                                                                                                                                                                                                                                                                                  }
+                                                                                                                                                                                                                                                                                                                                                  
+                                                                                                                                                                                                                                                                                                                                                        try {
+                                                                                                                                                                                                                                                                                                                                                                await addDoc(collection(db, "membros"), {
+                                                                                                                                                                                                                                                                                                                                                                          nome: nome,
+                                                                                                                                                                                                                                                                                                                                                                                    data: new Date()
+                                                                                                                                                                                                                                                                                                                                                                                            });
+                                                                                                                                                                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                                                                                                                                                    alert("Nome salvo com sucesso!");
+                                                                                                                                                                                                                                                                                                                                                                                                            document.getElementById("nome").value = "";
+                                                                                                                                                                                                                                                                                                                                                                                                                  } catch (e) {
+                                                                                                                                                                                                                                                                                                                                                                                                                          alert("Erro ao salvar!");
+                                                                                                                                                                                                                                                                                                                                                                                                                                  console.error(e);
+                                                                                                                                                                                                                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                                                                                                                                                                                                                              </script>
+                                                                                                                                                                                                                                                                                                                                                                                                                                              
+                                                                                                                                                                                                                                                                                                                                                                                                                                              </body>
+                                                                                                                                                                                                                                                                                                                                                                                                                                              </html>                                                                                                                                                         </html>
