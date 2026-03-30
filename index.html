@@ -5,64 +5,67 @@
 <title>🔥 Guild Fatal GOD 🔥</title>
 
 <style>
-body {
+body{
   margin:0;
-  background:black;
-  color:#fff;
-  font-family: Arial;
-  text-align:center;
+  font-family:Arial;
+  color:white;
   overflow:hidden;
 }
 
-/* 🎥 VIDEO */
+/* 🎥 VIDEO COM SOM */
 #bgVideo{
   position:fixed;
   width:100%;
   height:100%;
   object-fit:cover;
-  z-index:-2;
-  filter:brightness(0.3);
-}
-
-/* 🌑 OVERLAY ESCURO */
-.overlay{
-  position:fixed;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.4);
   z-index:-1;
 }
 
-/* 🔥 TEXTO NO MEIO */
-#centerText{
+/* 🔥 TELA INICIAL */
+#startScreen{
   position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  text-align:center;
+  width:100%;
+  height:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  background:rgba(0,0,0,0.4);
 }
 
-#centerText h1{
+#startScreen h1{
   font-size:40px;
   color:gold;
-  text-shadow:0 0 20px red,0 0 40px gold;
+  text-shadow:0 0 20px red;
 }
 
-#centerText p{
-  margin-top:10px;
-  font-size:18px;
+#startScreen button{
+  padding:15px;
+  margin-top:20px;
+  background:red;
+  border:none;
+  color:white;
+  cursor:pointer;
 }
 
-/* 📦 BOXES */
+/* 🔐 LOGIN */
+#loginScreen{
+  display:none;
+  position:absolute;
+  width:100%;
+  height:100%;
+  justify-content:center;
+  align-items:center;
+}
+
 .box{
   background:rgba(0,0,0,0.8);
+  padding:20px;
   border:1px solid red;
-  margin:10px;
-  padding:10px;
 }
 
-/* 🔒 ADMIN ESCONDIDO */
-#admin{
+/* 🧾 SISTEMA */
+#sistema{
   display:none;
 }
 </style>
@@ -70,49 +73,45 @@ body {
 
 <body>
 
-<!-- VIDEO -->
-<video autoplay muted loop id="bgVideo">
-  <source src="bg_compressed.mp4" type="video/mp4">
+<!-- 🎥 VIDEO COM SOM -->
+<video autoplay loop id="bgVideo">
+  <source src="video.mp4" type="video/mp4">
 </video>
 
-<div class="overlay"></div>
-
-<!-- TEXTO CENTRAL -->
-<div id="centerText">
+<!-- 🔥 TELA INICIAL -->
+<div id="startScreen">
   <h1>🔥 GUILD FATAL 🔥</h1>
-  <p>Domine o ranking. Prove seu poder.</p>
+  <p>Domine o servidor</p>
+  <button onclick="entrarSite()">ENTRAR</button>
 </div>
 
-<!-- 🎵 MUSICA -->
-<audio id="musica" loop>
-  <source src="musica.mp3" type="audio/mp3">
-</audio>
-
-<!-- CADASTRO -->
-<div class="box">
-<input id="nome" placeholder="Nick">
-<input id="classe" placeholder="Classe">
-<input id="resets" placeholder="Resets">
-<button onclick="enviar()">Entrar</button>
+<!-- 🔐 LOGIN -->
+<div id="loginScreen">
+  <div class="box">
+    <h2>Login</h2>
+    <input id="user" placeholder="Usuário"><br><br>
+    <input id="pass" type="password" placeholder="Senha"><br><br>
+    <button onclick="logar()">Entrar</button>
+  </div>
 </div>
 
-<!-- LISTAS -->
-<div class="box"><ul id="ranking"></ul></div>
-<div class="box"><ul id="listaPublica"></ul></div>
+<!-- 🧾 SISTEMA -->
+<div id="sistema">
 
-<!-- LOGIN ADMIN -->
-<div class="box">
-<input id="senha" type="password" placeholder="Senha admin">
-<button onclick="login()">Admin</button>
-</div>
+  <div class="box">
+    <input id="nome" placeholder="Nick">
+    <input id="classe" placeholder="Classe">
+    <input id="resets" placeholder="Resets">
+    <button onclick="enviar()">Cadastrar</button>
+  </div>
 
-<div id="admin">
-<ul id="pendentes"></ul>
+  <div class="box"><ul id="ranking"></ul></div>
+
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const app=initializeApp({
   apiKey:"AIza...",
@@ -121,67 +120,40 @@ const app=initializeApp({
 });
 const db=getFirestore(app);
 
-/* LOGIN */
-window.login = () => {
-  const senhaInput = document.getElementById("senha");
-  const adminPanel = document.getElementById("admin");
+/* 🎮 ENTRAR */
+window.entrarSite = () => {
+  startScreen.style.display = "none";
+  loginScreen.style.display = "flex";
+};
 
-  if (senhaInput.value === "admin123") {
-    adminPanel.style.display = "block";
+/* 🔐 LOGIN SIMPLES */
+window.logar = () => {
+  if(user.value === "admin" && pass.value === "123"){
+    loginScreen.style.display = "none";
+    sistema.style.display = "block";
   } else {
-    alert("Senha errada");
+    alert("Login inválido");
   }
 };
 
-/* CADASTRO */
+/* 📥 CADASTRO */
 window.enviar = async () => {
   await addDoc(collection(db,"membros"),{
     nome:nome.value,
     classe:classe.value,
-    resets:Number(resets.value),
-    status:"pendente"
+    resets:Number(resets.value)
   });
 };
 
-/* LISTA */
+/* 🏆 RANKING */
 onSnapshot(collection(db,"membros"),snap=>{
-  listaPublica.innerHTML="";
   ranking.innerHTML="";
-  pendentes.innerHTML="";
   let lista=[];
-
-  snap.forEach(d=>{
-    let data=d.data();
-    let id=d.id;
-
-    if(data.status==="aprovado"){
-      lista.push(data);
-      listaPublica.innerHTML+=`<li>${data.nome}</li>`;
-    }
-
-    if(data.status==="pendente"){
-      pendentes.innerHTML+=`
-        <li>${data.nome}
-        <button onclick="aprovar('${id}')">OK</button>
-        </li>`;
-    }
-  });
-
+  snap.forEach(d=>lista.push(d.data()));
   lista.sort((a,b)=>b.resets-a.resets);
-  lista.slice(0,5).forEach((p,i)=>{
+  lista.forEach((p,i)=>{
     ranking.innerHTML+=`<li>#${i+1} ${p.nome} (${p.resets})</li>`;
   });
-});
-
-/* APROVAR */
-window.aprovar = async (id) => {
-  await updateDoc(doc(db,"membros",id),{status:"aprovado"});
-};
-
-/* 🎵 MUSICA AUTO */
-const musica = document.getElementById("musica");
-document.addEventListener("click",()=>{
-  musica.play();
 });
 </script>
 
