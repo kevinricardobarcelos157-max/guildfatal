@@ -17,7 +17,7 @@
       color: white;
     }
 
-    /* 🎥 Vídeo de fundo */
+    /* 🎥 Seu vídeo continua funcionando */
     #bgVideo {
       position: fixed;
       top: 0;
@@ -28,19 +28,21 @@
       z-index: -1;
     }
 
-    /* 🎛️ Painel */
+    /* 🎛️ Painel de login */
     #painel {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       background: rgba(0,0,0,0.7);
-      padding: 20px;
+      padding: 25px;
       border-radius: 10px;
       text-align: center;
+      width: 300px;
     }
 
     input {
+      width: 100%;
       padding: 10px;
       margin-top: 10px;
       border: none;
@@ -48,6 +50,7 @@
     }
 
     button {
+      width: 100%;
       margin-top: 10px;
       padding: 10px;
       border: none;
@@ -61,32 +64,58 @@
 
 <body>
 
-  <!-- 🎥 Vídeo -->
+  <!-- 🎥 SEU VÍDEO (mantém o seu arquivo) -->
   <video autoplay muted loop id="bgVideo">
     <source src="bg_compressed.mp4" type="video/mp4">
   </video>
 
-  <!-- 🎛️ Painel -->
+  <!-- 🔐 PAINEL -->
   <div id="painel">
-    <h1>Guild Fatal</h1>
-    <input type="text" id="nome" placeholder="Digite seu nome">
-    <br>
-    <button onclick="entrar()">Entrar</button>
+    <h2>Login</h2>
+    <input type="text" id="usuario" placeholder="Usuário">
+    <input type="password" id="senha" placeholder="Senha">
+    <button onclick="login()">Entrar</button>
   </div>
 
-  <!-- ⚡ SCRIPT NO FINAL (ESSENCIAL) -->
-  <script>
-    function entrar() {
-      const nome = document.getElementById("nome").value;
+  <!-- 🎵 SUA MÚSICA (se já tiver, mantém aqui) -->
+  <!-- exemplo:
+  <audio autoplay loop>
+    <source src="musica.mp3" type="audio/mp3">
+  </audio>
+  -->
 
-      if (nome === "") {
-        alert("Digite um nome!");
+  <!-- ⚡ SCRIPT (CORRIGIDO) -->
+  <script>
+    function login() {
+      const user = document.getElementById("usuario");
+      const pass = document.getElementById("senha");
+      const painel = document.getElementById("painel");
+
+      // evita quebrar o site
+      if (!user || !pass || !painel) {
+        console.error("Erro: IDs não encontrados");
         return;
       }
 
-      alert("Bem-vindo, " + nome + "!");
+      const u = user.value.trim();
+      const p = pass.value.trim();
+
+      if (u === "" || p === "") {
+        alert("Preenche tudo");
+        return;
+      }
+
+      // 👉 AQUI você pode trocar login depois
+      if (u === "admin" && p === "123") {
+        painel.style.display = "none";
+
+        // exemplo: mostrar conteúdo depois do login
+        console.log("Entrou");
+      } else {
+        alert("Login inválido");
+      }
     }
   </script>
 
 </body>
-      </html>
+</html>
