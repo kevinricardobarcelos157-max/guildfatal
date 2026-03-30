@@ -15,7 +15,6 @@ body{
   background:black;
 }
 
-/* VIDEO (🔥 ÚNICA ALTERAÇÃO AQUI) */
 #bgVideo{
   position:fixed;
   top:50%;
@@ -23,12 +22,11 @@ body{
   width:100%;
   height:100%;
   object-fit:cover;
-  transform:translate(-50%, -50%) scale(0.75); /* 🔥 AFASTA O VÍDEO */
+  transform:translate(-50%, -50%) scale(0.75);
   z-index:-2;
   filter:brightness(0.4);
 }
 
-/* TITULO */
 #tituloCentral{
   position:absolute;
   top:10%;
@@ -65,7 +63,6 @@ body{
   animation:sangue 2s infinite alternate;
 }
 
-/* SUBTITULO */
 #subTitulo{
   margin-top:5px;
   font-size:18px;
@@ -75,7 +72,6 @@ body{
   text-shadow:0 0 15px red;
 }
 
-/* LOGO */
 #logoMain{
   position:absolute;
   top:22%;
@@ -90,7 +86,6 @@ body{
   animation: flutuar 3s infinite ease-in-out, pulseGlow 2s infinite alternate;
 }
 
-/* FOGO */
 #fire{
   position:absolute;
   top:20%;
@@ -117,7 +112,6 @@ body{
   100%{ transform:translateY(-180px) scale(0.2); opacity:0; }
 }
 
-/* CONTAINER */
 #container{
   position:absolute;
   top:55%;
@@ -127,7 +121,6 @@ body{
   max-width:350px;
 }
 
-/* LOGO FUNDO */
 #logoFundo{
   position:absolute;
   top:50%;
@@ -142,7 +135,6 @@ body{
   filter:blur(1px);
 }
 
-/* BOX */
 .box{
   background:rgba(0,0,0,0.85);
   border:1px solid red;
@@ -150,7 +142,6 @@ body{
   padding:15px;
 }
 
-/* BOTÃO */
 .btnMU{
   padding:10px;
   background:linear-gradient(45deg,#3a0000,#a00000);
@@ -158,9 +149,20 @@ body{
   color:white;
   margin-top:5px;
   width:100%;
+  cursor:pointer;
+  transition:0.2s;
 }
 
-/* ANIMAÇÕES */
+.btnMU:hover{
+  transform:scale(1.08);
+  box-shadow:0 0 20px red;
+}
+
+.btnMU:active{
+  transform:scale(0.95);
+  box-shadow:0 0 40px orange;
+}
+
 @keyframes flutuar{
   0%{ transform:translate(-50%,0px);}
   50%{ transform:translate(-50%,10px);}
@@ -180,6 +182,14 @@ body{
 @keyframes pulseGlow{
   from{ filter:drop-shadow(0 0 15px red);}
   to{ filter:drop-shadow(0 0 35px red);}
+}
+
+@keyframes tremer{
+  0%{transform:translate(0)}
+  25%{transform:translate(-5px,5px)}
+  50%{transform:translate(5px,-5px)}
+  75%{transform:translate(-5px,5px)}
+  100%{transform:translate(0)}
 }
 </style>
 </head>
@@ -233,21 +243,119 @@ body{
 </div>
 
 <script>
+// ===== API =====
+const API = "https://fatalguild-api.onrender.com";
+
+// ===== MODO =====
+let modo = 3;
+
+const inputs = document.querySelectorAll("input");
+const botoes = document.querySelectorAll(".btnMU");
+
+const clickSound = new Audio("https://www.soundjay.com/mechanical/sounds/sword-1.mp3");
+
+// BOTÕES
+botoes.forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    clickSound.currentTime = 0;
+    clickSound.play();
+    btn.style.transform="scale(0.9)";
+    setTimeout(()=>btn.style.transform="scale(1)",200);
+  });
+});
+
+// CADASTRO
+botoes[0].onclick = async () => {
+  const res = await fetch(API+"/register",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      email:inputs[0].value,
+      senha:inputs[1].value
+    })
+  });
+  const data = await res.json();
+  if(data.erro){ alert(data.erro); } else { tremerTela(); alert("Conta criada!"); }
+};
+
+// LOGIN
+botoes[1].onclick = async () => {
+  const res = await fetch(API+"/login",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      email:inputs[0].value,
+      senha:inputs[1].value
+    })
+  });
+  const data = await res.json();
+  if(data.ok){ tremerTela(); alert("🔥 BEM-VINDO 🔥"); } else { alert("Erro!"); }
+};
+
+// PERSONAGEM
+botoes[2].onclick = async () => {
+  await fetch(API+"/personagem",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      nick:inputs[2].value,
+      classe:inputs[3].value,
+      resets:Number(inputs[4].value)
+    })
+  });
+  atualizarSistema();
+};
+
+// SISTEMA
+async function atualizarSistema(){
+  const res = await fetch(API+"/ranking");
+  const lista = await res.json();
+
+  const rankingBox = document.querySelectorAll(".box")[2];
+  const membrosBox = document.querySelectorAll(".box")[3];
+
+  let rankingHTML = "<h3>🏆 Ranking</h3>";
+  let membrosHTML = "<h3>📜 Membros</h3>";
+
+  lista.forEach((p,i)=>{
+    rankingHTML += i===0
+      ? `<p style="color:gold;">👑 ${p.nick} - ${p.resets}</p>`
+      : `<p>${p.nick} - ${p.resets}</p>`;
+
+    membrosHTML += `<p>${p.nick} (${p.classe})</p>`;
+  });
+
+  rankingBox.innerHTML = rankingHTML;
+  membrosBox.innerHTML = membrosHTML;
+}
+
+// TREMER
+function tremerTela(){
+  document.body.style.animation="tremer 0.3s";
+  setTimeout(()=>document.body.style.animation="",300);
+}
+
+// VIDEO
 document.body.addEventListener("click", ()=>{
   const video = document.getElementById("bgVideo");
   video.muted = false;
   video.play();
 });
 
+// FOGO
 const fire = document.getElementById("fire");
 
 setInterval(()=>{
   const p = document.createElement("div");
-  p.className = "fireParticle";
-  p.style.left = Math.random()*260 + "px";
+  p.className="fireParticle";
+  p.style.left=Math.random()*260+"px";
   fire.appendChild(p);
-  setTimeout(()=>{ p.remove(); },2000);
+  setTimeout(()=>p.remove(),2000);
 },100);
+
+// UPDATE
+setInterval(atualizarSistema,3000);
+atualizarSistema();
 </script>
 
 </body>
