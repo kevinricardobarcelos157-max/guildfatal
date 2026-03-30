@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Guild Fatal</title>
+<title>Guild Fatal - FINAL</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
 
@@ -13,309 +13,263 @@
 <style>
 body{
   margin:0;
-  font-family:Arial;
+  background:black;
   color:white;
-  text-align:center;
-  background:black;
-  overflow-x:hidden;
+  font-family:Arial;
 }
 
-/* 🔥 LOADING MU */
-#loading{
-  position:fixed;
-  width:100%;
-  height:100%;
-  background:black;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-  z-index:9999;
-}
-
-#loading h1{
-  color:red;
-  font-family:'Cinzel';
-  font-size:40px;
-  text-shadow:0 0 20px red;
-  animation:pulse 1.5s infinite alternate;
-}
-
-@keyframes pulse{
-  from{opacity:0.5;}
-  to{opacity:1;}
-}
-
-/* 🔥 VIDEO */
+/* VIDEO */
 #bgVideo{
   position:fixed;
-  top:50%;
-  left:50%;
   width:100%;
   height:100%;
   object-fit:cover;
-  transform:translate(-50%,-50%);
-  z-index:-3;
-  filter:brightness(0.5);
+  z-index:-5;
+  filter:brightness(0.35);
 }
 
-/* 🔥 CANVAS FOGO */
-#fireCanvas{
+/* CANVAS */
+canvas{
   position:fixed;
   top:0;
   left:0;
   width:100%;
   height:100%;
-  z-index:-2;
-  pointer-events:none;
+}
+#fireBg{z-index:-4;}
+#magic{z-index:-3;}
+#lava{z-index:-2;}
+#lightning{z-index:-1;}
+
+/* 🔥 LOGO */
+.logo{
+  text-align:center;
+  margin-top:40px;
+  font-family:'Cinzel';
+}
+.logo h1{
+  font-size:90px;
+  color:red;
+  text-shadow:0 0 40px red;
 }
 
-/* OVERLAY */
-body::after{
-  content:"";
+/* 🎮 HUD */
+#hud{
   position:fixed;
-  width:100%;
-  height:100%;
-  background:radial-gradient(circle, rgba(255,0,0,0.1), black);
-  z-index:-1;
+  top:10px;
+  left:10px;
+  width:200px;
 }
-
-/* BANNER */
-.banner{
-  margin-top:20px;
-  perspective:1000px;
-}
-
-.banner img{
-  width:90%;
-  max-width:700px;
-  border-radius:12px;
-  animation: glowPulse 2.5s infinite alternate, float 4s ease-in-out infinite;
-  transform-style:preserve-3d;
-  transition: transform 0.1s;
-  box-shadow:0 0 40px red;
-}
-
-/* 🎮 mouse real */
-.banner img{
-  transform: rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
-}
-
-/* brilho */
-@keyframes glowPulse{
-  from{filter:brightness(1);}
-  to{filter:brightness(1.3);}
-}
-
-/* flutuação */
-@keyframes float{
-  50%{ transform: translateY(-10px); }
-}
-
-/* TITULO */
-.titulo3d{
-  font-family: 'Cinzel';
-  font-size:60px;
-  margin-top:10px;
-  color:#ff0000;
-  letter-spacing:5px;
-  text-shadow:0 0 25px red;
-}
-
-/* CENTRALIZA LOGIN */
-#container{
-  margin-top:120px;
-}
-
-/* BOX */
-.box{
-  background:rgba(20,0,0,0.85);
+.bar{
+  height:18px;
+  background:#300;
+  margin:5px 0;
   border:1px solid red;
-  margin:10px auto;
-  padding:15px;
-  width:90%;
-  max-width:350px;
+}
+.hpFill{
+  height:100%;
+  background:red;
+  width:100%;
+}
+
+/* 🏆 RANK */
+#ranking{
+  position:fixed;
+  right:10px;
+  top:10px;
+  background:rgba(0,0,0,0.7);
+  padding:10px;
+  border:1px solid red;
+}
+
+/* 👑 ADMIN */
+#admin{
+  position:fixed;
+  bottom:10px;
+  right:10px;
+  background:#111;
+  padding:10px;
+  border:1px solid red;
+  display:none;
+}
+
+/* 🎯 LOGIN CENTRALIZADO PERFEITO */
+#container{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+}
+
+.box{
+  background:rgba(20,0,0,0.95);
+  padding:20px;
+  border:1px solid red;
+  width:280px;
   box-shadow:0 0 20px red;
 }
 
-/* INPUT */
-input{
-  width:90%;
-  padding:8px;
-  background:#1a0000;
+input,button{
+  width:100%;
+  margin:5px 0;
+  padding:10px;
+  background:black;
   border:1px solid red;
   color:white;
 }
 
-/* BOTÃO */
-.btnMU{
-  padding:10px;
+button{
   background:linear-gradient(45deg,#5a0000,#ff0000);
-  border:none;
-  color:white;
-  margin-top:5px;
-  width:100%;
   cursor:pointer;
 }
-
-.btnMU:hover{
+button:hover{
   transform:scale(1.05);
 }
-
-/* TOP 1 */
-.top1{
-  color:gold;
-  animation: brilho 1s infinite alternate;
-}
-
-@keyframes brilho{
-  from{ text-shadow:0 0 5px gold; }
-  to{ text-shadow:0 0 20px gold; }
-}
-
-/* CHAT */
-.lider{ color: gold; }
-.oficial{ color: cyan; }
-.membro{ color: white; }
-
 </style>
 </head>
 
 <body>
 
-<!-- 🔥 LOADING -->
-<div id="loading">
-  <h1>🔥 CARREGANDO GUILD FATAL...</h1>
-</div>
-
-<!-- 🔥 FOGO -->
-<canvas id="fireCanvas"></canvas>
-
-<!-- 🔥 BANNER -->
-<div class="banner">
-  <img src="guild.jpg">
-</div>
-
+<!-- 🎬 VIDEO COM SOM -->
 <video id="bgVideo" autoplay muted loop>
   <source src="bg_compressed.mp4" type="video/mp4">
 </video>
 
-<h1 class="titulo3d">GUILD FATAL</h1>
+<canvas id="fireBg"></canvas>
+<canvas id="magic"></canvas>
+<canvas id="lava"></canvas>
+<canvas id="lightning"></canvas>
 
+<!-- LOGO -->
+<div class="logo">
+  <h1>GUILD FATAL</h1>
+</div>
+
+<!-- HUD -->
+<div id="hud">
+  HP
+  <div class="bar"><div id="hp" class="hpFill"></div></div>
+</div>
+
+<!-- RANK -->
+<ul id="ranking"></ul>
+
+<!-- LOGIN -->
 <div id="container">
-
-<div class="box">
-<h3>Conta</h3>
-<input id="email" placeholder="Email"><br><br>
-<input id="senha" type="password" placeholder="Senha"><br><br>
-
-<button class="btnMU" onclick="registrar()">Cadastrar</button>
-<button class="btnMU" onclick="login()">Entrar</button>
-<button class="btnMU" onclick="virarAdminSeguro()">Virar Líder 👑</button>
+  <div class="box">
+    <input id="email" placeholder="Email">
+    <input id="senha" type="password" placeholder="Senha">
+    <button onclick="login()">Entrar</button>
+  </div>
 </div>
 
-<div class="box">
-<input id="nick" placeholder="Nick"><br><br>
-<input id="classe" placeholder="Classe"><br><br>
-<input id="resets" placeholder="Resets"><br><br>
-<button class="btnMU" onclick="criarPersonagem()">Cadastrar personagem</button>
-</div>
-
-<div class="box" id="rankingBox"></div>
-<div class="box" id="membrosBox"></div>
-
-<div class="box">
-<h3>💬 Chat</h3>
-<div id="chatBox" style="height:150px;overflow:auto;text-align:left;"></div>
-<input id="msg" placeholder="Mensagem">
-<button class="btnMU" onclick="enviarMsg()">Enviar</button>
-</div>
-
+<!-- ADMIN -->
+<div id="admin">
+  <button onclick="addFakePlayer()">Add Player</button>
 </div>
 
 <script>
 
-/* 🔥 LOADING SUMIR */
-window.onload = () => {
-  setTimeout(()=>document.getElementById("loading").style.display="none",1500);
-};
-
-/* 🎮 MOUSE 3D */
-document.addEventListener("mousemove", e=>{
-  const x = (e.clientX / window.innerWidth - 0.5)*20;
-  const y = (e.clientY / window.innerHeight - 0.5)*20;
-
-  document.querySelector(".banner img")
-    .style.setProperty('--rx', `${-y}deg`);
-
-  document.querySelector(".banner img")
-    .style.setProperty('--ry', `${x}deg`);
-});
-
-/* 🔥 PARTÍCULAS */
-const canvas = document.getElementById("fireCanvas");
-const ctx = canvas.getContext("2d");
-canvas.width = innerWidth;
-canvas.height = innerHeight;
-
-let particles=[];
-
-function createFire(){
-  particles.push({
-    x: Math.random()*canvas.width,
-    y: canvas.height,
-    size: Math.random()*5+2,
-    speedY: Math.random()*3+1,
-    alpha: Math.random()
-  });
-}
-
-function drawFire(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-
-  particles.forEach((p,i)=>{
-    p.y -= p.speedY;
-    p.alpha -= 0.01;
-
-    ctx.fillStyle = `rgba(255,${Math.random()*150},0,${p.alpha})`;
-    ctx.beginPath();
-    ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
-    ctx.fill();
-
-    if(p.alpha<=0) particles.splice(i,1);
-  });
-
-  requestAnimationFrame(drawFire);
-}
-
-setInterval(createFire,30);
-drawFire();
-
-/* 🔊 SOM ORIGINAL */
+/* 🔊 LIBERA SOM DO VÍDEO */
 document.body.addEventListener("click", ()=>{
   const v=document.getElementById("bgVideo");
   v.muted=false;
   v.play().catch(()=>{});
 },{once:true});
 
-/* FIREBASE (intacto) */
-const firebaseConfig = {
-  apiKey: "SUA_KEY_AQUI",
-  authDomain: "fatal-guild.firebaseapp.com",
-  projectId: "fatal-guild"
+/* FIREBASE */
+const firebaseConfig={
+  apiKey:"SUA_KEY",
+  authDomain:"fatal-guild.firebaseapp.com",
+  projectId:"fatal-guild"
 };
-
 firebase.initializeApp(firebaseConfig);
 
-const auth = firebase.auth();
-const db = firebase.firestore();
+const auth=firebase.auth();
+const db=firebase.firestore();
 
-let usuarioAtual=null;
-let meuCargo=null;
+/* LOGIN */
+function login(){
+  auth.signInWithEmailAndPassword(email.value,senha.value)
+  .then(()=>{
+    admin.style.display="block";
+    carregarRanking();
+  });
+}
 
-/* RESTO IGUAL (mantido) */
+/* RANK */
+function carregarRanking(){
+  db.collection("players").orderBy("resets","desc")
+  .onSnapshot(snap=>{
+    ranking.innerHTML="";
+    snap.forEach(doc=>{
+      let d=doc.data();
+      ranking.innerHTML+=`<li>${d.nick} - ${d.resets}</li>`;
+    });
+  });
+}
+
+/* ADMIN */
+function addFakePlayer(){
+  db.collection("players").add({
+    nick:"Player"+Math.floor(Math.random()*100),
+    resets:Math.floor(Math.random()*1000)
+  });
+}
+
+/* HUD HP */
+setInterval(()=>{
+  hp.style.width=(60+Math.random()*40)+"%";
+},2000);
+
+/* 🔥 FOGO */
+let f=fireBg.getContext("2d");
+fireBg.width=innerWidth;fireBg.height=innerHeight;
+setInterval(()=>{
+f.fillStyle="orange";
+f.fillRect(Math.random()*innerWidth,innerHeight-80,2,6);
+},25);
+
+/* ⚡ RAIO */
+let l=lightning.getContext("2d");
+lightning.width=innerWidth;lightning.height=innerHeight;
+
+function lightningFx(){
+l.clearRect(0,0,innerWidth,innerHeight);
+if(Math.random()<0.03){
+l.strokeStyle="white";
+l.beginPath();
+l.moveTo(Math.random()*innerWidth,0);
+l.lineTo(Math.random()*innerWidth,innerHeight);
+l.stroke();
+}
+requestAnimationFrame(lightningFx);
+}
+lightningFx();
+
+/* 🌋 LAVA */
+let lv=lava.getContext("2d");
+lava.width=innerWidth;lava.height=innerHeight;
+
+function lavaFx(){
+lv.fillStyle="rgba(255,80,0,0.12)";
+lv.fillRect(0,innerHeight-80,innerWidth,80);
+requestAnimationFrame(lavaFx);
+}
+lavaFx();
+
+/* ✨ MAGIA */
+let m=magic.getContext("2d");
+magic.width=innerWidth;magic.height=innerHeight;
+
+function magicFx(){
+m.fillStyle="purple";
+m.fillRect(Math.random()*innerWidth,Math.random()*innerHeight,2,2);
+requestAnimationFrame(magicFx);
+}
+magicFx();
 
 </script>
 
 </body>
-</html>
+  </html>
