@@ -5,156 +5,68 @@
 <title>🔥 Guild Fatal 🔥</title>
 
 <style>
-body{
-  margin:0;
-    font-family:Arial;
-      color:white;
-        text-align:center;
-        }
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial;
+    color: white;
+    text-align: center;
+    overflow: hidden;
+}
 
-        /* VIDEO FUNDO */
-        #bgVideo{
-          position:fixed;
-            top:0;
-              left:0;
-                width:100vw;
-                  height:100vh;
-                    object-fit:cover;
-                      z-index:-1;
-                        filter:brightness(0.4);
-                        }
+/* VIDEO FUNDO */
+#bgVideo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
 
-                        /* BOX */
-                        .box{
-                          background:rgba(0,0,0,0.7);
-                            border:1px solid red;
-                              margin:10px;
-                                padding:10px;
-                                }
+/* CAIXAS */
+.box {
+    background: rgba(0,0,0,0.7);
+    border: 1px solid red;
+    margin: 10px;
+    padding: 10px;
+}
 
-                                input,button{
-                                  padding:8px;
-                                    margin:5px;
-                                    }
+input, button {
+    padding: 8px;
+    margin: 5px;
+}
 
-                                    h1{
-                                      color:gold;
-                                      }
-                                      </style>
-                                      </head>
+h1 {
+    color: gold;
+}
+</style>
+</head>
 
-                                      <body>
+<body>
 
-                                      <!-- VIDEO -->
-                                      <video autoplay muted loop playsinline id="bgVideo">
-                                        <source src="bg_compressed.mp4" type="video/mp4">
-                                        </video
+<!-- VIDEO -->
+<video autoplay muted loop playsinline id="bgVideo">
+    <source src="bg_compressed.mp4" type="video/mp4">
+</video>
 
-                                        <h1>🔥 GUILD FATAL 🔥</h1>
+<h1>🔥 GUILD FATAL 🔥</h1>
 
-                                        <!-- LOGIN -->
-                                        <div class="box">
-                                        <h3>Login</h3>
-                                        <input id="loginUser" placeholder="Usuário">
-                                        <input id="loginPass" type="password" placeholder="Senha">
-                                        <br>
-                                        <button onclick="entrar()">Entrar</button>
-                                        <button onclick="mostrarCadastro()">Criar Conta</button>
-                                        <button onclick="mostrarReset()">Recuperar Senha</button>
-                                        </div>
+<!-- LOGIN -->
+<div class="box">
+    <h3>Login</h3>
+    <input placeholder="Usuário">
+    <input type="password" placeholder="Senha"><br>
+    <button>Entrar</button>
+    <button>Criar Conta</button>
+    <button>Recuperar Senha</button>
+</div>
 
-                                        <!-- CADASTRO -->
-                                        <div class="box" id="cadastroBox" style="display:none">
-                                        <h3>Criar Conta</h3>
-                                        <input id="novoUser" placeholder="Usuário">
-                                        <input id="novoPass" type="password" placeholder="Senha">
-                                        <button onclick="criarConta()">Criar</button>
-                                        </div>
+<!-- RANK -->
+<div class="box">
+    <h3>Ranking</h3>
+</div>
 
-                                        <!-- RESET -->
-                                        <div class="box" id="resetBox" style="display:none">
-                                        <h3>Recuperar Senha</h3>
-                                        <input id="resetUser" placeholder="Usuário">
-                                        <button onclick="resetar()">Recuperar</button>
-                                        <p id="resetMsg"></p>
-                                        </div>
-
-                                        <!-- GUILD -->
-                                        <div class="box" id="guildBox" style="display:none">
-                                        <h3>Entrar na Guild</h3>
-                                        <input id="nome" placeholder="Nick">
-                                        <input id="classe" placeholder="Classe">
-                                        <input id="resets" placeholder="Resets">
-                                        <button onclick="add()">Adicionar</button>
-                                        </div>
-
-                                        <!-- RANKING -->
-                                        <div class="box">
-                                        <h3>Ranking</h3>
-                                        <ul id="lista"></ul>
-                                        </div>
-
-                                        <script>
-                                        let contas = JSON.parse(localStorage.getItem("contas")) || [];
-                                        let guild = JSON.parse(localStorage.getItem("guild")) || [];
-
-                                        /* LIBERAR SOM DO VIDEO */
-                                        document.addEventListener("click", ()=>{
-                                          let v = document.getElementById("bgVideo");
-                                            v.muted = false;
-                                              v.play();
-                                              });
-
-                                              /* LOGIN */
-                                              function entrar(){
-                                                let user = contas.find(c => c.user === loginUser.value && c.pass === loginPass.value);
-                                                  if(user){
-                                                      alert("Entrou!");
-                                                          guildBox.style.display="block";
-                                                            } else {
-                                                                alert("Login errado");
-                                                                  }
-                                                                  }
-
-                                                                  /* CADASTRO */
-                                                                  function criarConta(){
-                                                                    contas.push({user:novoUser.value, pass:novoPass.value});
-                                                                      localStorage.setItem("contas", JSON.stringify(contas));
-                                                                        alert("Conta criada!");
-                                                                        }
-
-                                                                        /* RESET */
-                                                                        function resetar(){
-                                                                          let user = contas.find(c => c.user === resetUser.value);
-                                                                            resetMsg.innerText = user ? "Senha: "+user.pass : "Não encontrado";
-                                                                            }
-
-                                                                            /* GUILD */
-                                                                            function add(){
-                                                                              guild.push({
-                                                                                  nome:nome.value,
-                                                                                      classe:classe.value,
-                                                                                          resets:Number(resets.value)
-                                                                                            });
-                                                                                              localStorage.setItem("guild", JSON.stringify(guild));
-                                                                                                render();
-                                                                                                }
-
-                                                                                                /* RANKING */
-                                                                                                function render(){
-                                                                                                  lista.innerHTML="";
-                                                                                                    guild.sort((a,b)=>b.resets-a.resets);
-                                                                                                      guild.forEach(p=>{
-                                                                                                          lista.innerHTML += `<li>${p.nome} - ${p.resets}</li>`;
-                                                                                                            });
-                                                                                                            }
-
-                                                                                                            /* UI */
-                                                                                                            function mostrarCadastro(){ cadastroBox.style.display="block"; }
-                                                                                                            function mostrarReset(){ resetBox.style.display="block"; }
-
-                                                                                                            render();
-                                                                                                            </script>
-
-                                                                                                            </body>
-                                                                                                            </html>
+</body>
+  </html>
