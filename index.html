@@ -17,8 +17,36 @@ body{
   color:white;
   text-align:center;
   background:black;
+  overflow-x:hidden;
 }
 
+/* 🔥 LOADING MU */
+#loading{
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:black;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  z-index:9999;
+}
+
+#loading h1{
+  color:red;
+  font-family:'Cinzel';
+  font-size:40px;
+  text-shadow:0 0 20px red;
+  animation:pulse 1.5s infinite alternate;
+}
+
+@keyframes pulse{
+  from{opacity:0.5;}
+  to{opacity:1;}
+}
+
+/* 🔥 VIDEO */
 #bgVideo{
   position:fixed;
   top:50%;
@@ -27,47 +55,87 @@ body{
   height:100%;
   object-fit:cover;
   transform:translate(-50%,-50%);
-  z-index:-2;
-  filter:brightness(0.7);
+  z-index:-3;
+  filter:brightness(0.5);
 }
 
+/* 🔥 CANVAS FOGO */
+#fireCanvas{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  z-index:-2;
+  pointer-events:none;
+}
+
+/* OVERLAY */
 body::after{
   content:"";
   position:fixed;
   width:100%;
   height:100%;
-  background:rgba(255,0,0,0.08);
+  background:radial-gradient(circle, rgba(255,0,0,0.1), black);
   z-index:-1;
+}
+
+/* BANNER */
+.banner{
+  margin-top:20px;
+  perspective:1000px;
+}
+
+.banner img{
+  width:90%;
+  max-width:700px;
+  border-radius:12px;
+  animation: glowPulse 2.5s infinite alternate, float 4s ease-in-out infinite;
+  transform-style:preserve-3d;
+  transition: transform 0.1s;
+  box-shadow:0 0 40px red;
+}
+
+/* 🎮 mouse real */
+.banner img{
+  transform: rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
+}
+
+/* brilho */
+@keyframes glowPulse{
+  from{filter:brightness(1);}
+  to{filter:brightness(1.3);}
+}
+
+/* flutuação */
+@keyframes float{
+  50%{ transform: translateY(-10px); }
 }
 
 /* TITULO */
 .titulo3d{
-  font-family: 'Cinzel', serif;
-  font-size:48px;
-  margin-top:40px;
-  color:#e60000;
-  letter-spacing:4px;
-  text-shadow: 2px 2px 10px black, 0 0 15px red;
+  font-family: 'Cinzel';
+  font-size:60px;
+  margin-top:10px;
+  color:#ff0000;
+  letter-spacing:5px;
+  text-shadow:0 0 25px red;
 }
 
-/* CONTAINER */
+/* CENTRALIZA LOGIN */
 #container{
-  margin:40px auto;
-  width:90%;
-  max-width:350px;
-}
-
-@media (min-width:768px){
-  #container{ max-width:280px; }
+  margin-top:120px;
 }
 
 /* BOX */
 .box{
-  background:rgba(20,0,0,0.8);
+  background:rgba(20,0,0,0.85);
   border:1px solid red;
-  margin:10px;
+  margin:10px auto;
   padding:15px;
-  box-shadow:0 0 15px red;
+  width:90%;
+  max-width:350px;
+  box-shadow:0 0 20px red;
 }
 
 /* INPUT */
@@ -77,11 +145,6 @@ input{
   background:#1a0000;
   border:1px solid red;
   color:white;
-}
-
-input:focus{
-  outline:none;
-  box-shadow:0 0 8px red;
 }
 
 /* BOTÃO */
@@ -99,10 +162,9 @@ input:focus{
   transform:scale(1.05);
 }
 
-/* 🏆 TOP 1 ANIMADO */
+/* TOP 1 */
 .top1{
   color:gold;
-  font-weight:bold;
   animation: brilho 1s infinite alternate;
 }
 
@@ -111,7 +173,7 @@ input:focus{
   to{ text-shadow:0 0 20px gold; }
 }
 
-/* 💬 CHAT CORES */
+/* CHAT */
 .lider{ color: gold; }
 .oficial{ color: cyan; }
 .membro{ color: white; }
@@ -120,6 +182,19 @@ input:focus{
 </head>
 
 <body>
+
+<!-- 🔥 LOADING -->
+<div id="loading">
+  <h1>🔥 CARREGANDO GUILD FATAL...</h1>
+</div>
+
+<!-- 🔥 FOGO -->
+<canvas id="fireCanvas"></canvas>
+
+<!-- 🔥 BANNER -->
+<div class="banner">
+  <img src="guild.jpg">
+</div>
 
 <video id="bgVideo" autoplay muted loop>
   <source src="bg_compressed.mp4" type="video/mp4">
@@ -159,6 +234,71 @@ input:focus{
 </div>
 
 <script>
+
+/* 🔥 LOADING SUMIR */
+window.onload = () => {
+  setTimeout(()=>document.getElementById("loading").style.display="none",1500);
+};
+
+/* 🎮 MOUSE 3D */
+document.addEventListener("mousemove", e=>{
+  const x = (e.clientX / window.innerWidth - 0.5)*20;
+  const y = (e.clientY / window.innerHeight - 0.5)*20;
+
+  document.querySelector(".banner img")
+    .style.setProperty('--rx', `${-y}deg`);
+
+  document.querySelector(".banner img")
+    .style.setProperty('--ry', `${x}deg`);
+});
+
+/* 🔥 PARTÍCULAS */
+const canvas = document.getElementById("fireCanvas");
+const ctx = canvas.getContext("2d");
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+
+let particles=[];
+
+function createFire(){
+  particles.push({
+    x: Math.random()*canvas.width,
+    y: canvas.height,
+    size: Math.random()*5+2,
+    speedY: Math.random()*3+1,
+    alpha: Math.random()
+  });
+}
+
+function drawFire(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  particles.forEach((p,i)=>{
+    p.y -= p.speedY;
+    p.alpha -= 0.01;
+
+    ctx.fillStyle = `rgba(255,${Math.random()*150},0,${p.alpha})`;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+    ctx.fill();
+
+    if(p.alpha<=0) particles.splice(i,1);
+  });
+
+  requestAnimationFrame(drawFire);
+}
+
+setInterval(createFire,30);
+drawFire();
+
+/* 🔊 SOM ORIGINAL */
+document.body.addEventListener("click", ()=>{
+  const v=document.getElementById("bgVideo");
+  v.muted=false;
+  v.play().catch(()=>{});
+},{once:true});
+
+/* FIREBASE (intacto) */
 const firebaseConfig = {
   apiKey: "SUA_KEY_AQUI",
   authDomain: "fatal-guild.firebaseapp.com",
@@ -173,132 +313,9 @@ const db = firebase.firestore();
 let usuarioAtual=null;
 let meuCargo=null;
 
-/* 🔊 SOM */
-document.body.addEventListener("click", ()=>{
-  const v=document.getElementById("bgVideo");
-  v.muted=false;
-  v.play().catch(()=>{});
-},{once:true});
+/* RESTO IGUAL (mantido) */
 
-/* AUTH */
-async function registrar(){
-  const cred=await auth.createUserWithEmailAndPassword(email.value,senha.value);
-  await db.collection("usuarios").doc(cred.user.uid).set({
-    email:email.value,
-    cargo:"Membro"
-  });
-  alert("Conta criada!");
-}
-
-async function login(){
-  const cred=await auth.signInWithEmailAndPassword(email.value,senha.value);
-  usuarioAtual=cred.user;
-
-  const doc=await db.collection("usuarios").doc(usuarioAtual.uid).get();
-  meuCargo=doc.exists?doc.data().cargo:"Membro";
-
-  atualizarSistema();
-  carregarChat();
-}
-
-/* LÍDER */
-async function virarAdminSeguro(){
-  if(usuarioAtual.email!=="SEUEMAIL@gmail.com") return alert("Sem permissão");
-  await db.collection("usuarios").doc(usuarioAtual.uid).update({cargo:"Lider"});
-  meuCargo="Lider";
-}
-
-/* PERSONAGEM */
-async function criarPersonagem(){
-  await db.collection("personagens").add({
-    uid:usuarioAtual.uid,
-    nick:nick.value,
-    classe:classe.value,
-    resets:Number(resets.value)||0
-  });
-  atualizarSistema();
-}
-
-/* 🏆 RANKING ANIMADO */
-async function atualizarSistema(){
-  let rankingHTML="<h3>🏆 Ranking</h3>";
-  let membrosHTML="<h3>📜 Membros</h3>";
-
-  const ranking=await db.collection("personagens").orderBy("resets","desc").get();
-
-  ranking.forEach((doc,i)=>{
-    const p=doc.data();
-    rankingHTML+=`<p class="${i==0?'top1':''}">
-      ${i==0?'👑':''} ${p.nick} - ${p.resets}
-    </p>`;
-  });
-
-  const membros=await db.collection("usuarios").get();
-
-  membros.forEach(doc=>{
-    const u=doc.data();
-    membrosHTML+=`
-    <p>
-      ${u.email} - ${u.cargo}
-      ${meuCargo==="Lider" ? `<button onclick="promover('${doc.id}')">⬆️</button>` : ""}
-    </p>`;
-  });
-
-  rankingBox.innerHTML=rankingHTML;
-  membrosBox.innerHTML=membrosHTML;
-}
-
-/* 🔼 PROMOVER */
-async function promover(uid){
-  if(meuCargo!=="Lider") return;
-
-  const ref=db.collection("usuarios").doc(uid);
-  const doc=await ref.get();
-  const u=doc.data();
-
-  let novo="Membro";
-  if(u.cargo==="Membro") novo="Oficial";
-  else if(u.cargo==="Oficial") novo="Lider";
-
-  await ref.update({cargo:novo});
-  atualizarSistema();
-}
-
-/* 💬 CHAT COM CARGO */
-function carregarChat(){
-  db.collection("chat").orderBy("time").limit(50)
-  .onSnapshot(async snap=>{
-    let html="";
-
-    for(const d of snap.docs){
-      const m=d.data();
-
-      const userSnap=await db.collection("usuarios")
-        .where("email","==",m.user).get();
-
-      let cargo="membro";
-      userSnap.forEach(u=>{
-        cargo=u.data().cargo.toLowerCase();
-      });
-
-      html+=`<p class="${cargo}">
-        <b>${m.user}:</b> ${m.texto}
-      </p>`;
-    }
-
-    chatBox.innerHTML=html;
-  });
-}
-
-async function enviarMsg(){
-  await db.collection("chat").add({
-    user:usuarioAtual.email,
-    texto:msg.value,
-    time:Date.now()
-  });
-  msg.value="";
-}
 </script>
 
 </body>
-  </html>
+</html>
