@@ -5,231 +5,279 @@
 <title>🔥 Guild Fatal GOD 🔥</title>
 
 <style>
-body {
-  background: radial-gradient(circle at center, #000000 0%, #140000 40%, #000000 100%);
-    color: #fff;
-      font-family: Arial;
-        text-align: center;
-        }
-        h1 {
-          color: gold;
-            text-shadow: 0 0 10px red,0 0 20px red,0 0 30px gold,0 0 60px gold;
-            }
-            .box {
-              background:rgba(0,0,0,0.85);
-                border:1px solid #550000;
-                  box-shadow:0 0 15px red;
-                    margin:10px;
-                      padding:10px;
-                      }
-                      input,button {
-                        margin:5px;
-                          padding:5px;
-                          }
-                          #admin,#painelGM{display:none;}
-                          #chatBox,#dmBox{height:150px;overflow:auto;border:1px solid red;margin-top:5px;}
-                          </style>
-                          </head>
+body{
+margin:0;
+background:black;
+color:#fff;
+font-family:Arial;
+text-align:center;
+overflow-x:hidden;
+}
 
-                          <body>
+/* VIDEO */
+#bgVideo{
+position:fixed;
+width:100%;
+height:100%;
+object-fit:cover;
+z-index:-5;
+filter:brightness(0.3);
+}
 
-                          <h1>🔥 GUILD FATAL 🔥</h1>
+/* DRAGAO */
+.dragon{
+position:fixed;
+top:20%;
+left:-300px;
+width:300px;
+animation:fly 25s linear infinite;
+z-index:-3;
+}
+@keyframes fly{
+0%{left:-300px;}
+100%{left:120%;}
+}
 
-                          <!-- LOGIN -->
-                          <div class="box">
-                          <h2>🔐 Login</h2>
-                          <input id="loginPlayer" placeholder="Login">
-                          <input id="senhaPlayer" type="password" placeholder="Senha">
-                          <button onclick="login()">Entrar</button>
-                          <button onclick="logout()">Sair</button>
-                          </div>
+/* PARTICULAS */
+.particle{
+position:fixed;
+width:3px;
+height:3px;
+background:gold;
+border-radius:50%;
+animation:rise linear infinite;
+}
+@keyframes rise{
+from{transform:translateY(100vh);}
+to{transform:translateY(-10vh);opacity:0;}
+}
 
-                          <!-- RECUPERAR -->
-                          <div class="box">
-                          <h2>🔁 Recuperar Senha</h2>
-                          <input id="emailRecuperar" placeholder="Login">
-                          <button onclick="recuperarSenha()">Recuperar</button>
-                          </div>
+/* HUD */
+#hud{
+position:fixed;
+top:10px;
+left:10px;
+z-index:999;
+text-align:left;
+}
 
-                          <!-- CADASTRO -->
-                          <div class="box">
-                          <h2>Criar Conta</h2>
-                          <input id="nome" placeholder="Nick">
-                          <input id="classe" placeholder="Classe">
-                          <input id="resets" placeholder="Resets">
-                          <input id="loginConta" placeholder="Login">
-                          <input id="senhaConta" type="password" placeholder="Senha">
-                          <button onclick="criarConta()">Criar Conta</button>
-                          </div>
+/* UI */
+.box{
+background:rgba(0,0,0,0.85);
+border:1px solid red;
+box-shadow:0 0 15px red;
+margin:10px;
+padding:10px;
+}
 
-                          <!-- CHAT -->
-                          <div class="box">
-                          <h2>💬 Chat Global</h2>
-                          <div id="chatBox"></div>
-                          <input id="nickChat" placeholder="Nick">
-                          <input id="msg" placeholder="Mensagem">
-                          <button onclick="enviarMsg()">Enviar</button>
-                          </div>
+h1{
+color:gold;
+text-shadow:0 0 20px red,0 0 40px gold;
+}
 
-                          <!-- DM -->
-                          <div class="box">
-                          <h2>📩 DM</h2>
-                          <input id="para" placeholder="Para">
-                          <input id="msgPrivada" placeholder="Mensagem">
-                          <button onclick="enviarDM()">Enviar</button>
-                          <button onclick="toggleDM()">Mostrar/Esconder</button>
-                          <div id="dmBox"></div>
-                          </div>
+#btnMusica{
+position:fixed;
+bottom:10px;
+right:10px;
+z-index:999;
+}
 
-                          <!-- RESTO -->
-                          <div class="box"><h2>🏆 Ranking</h2><ul id="ranking"></ul></div>
-                          <div class="box"><h2>Membros</h2><ul id="listaPublica"></ul></div>
-                          <div class="box"><h2>📜 Histórico</h2><ul id="historico"></ul></div>
+#admin,#painelGM{display:none;}
+#chatBox,#dmBox{height:150px;overflow:auto;border:1px solid red;margin-top:5px;}
+</style>
+</head>
 
-                          <div class="box">
-                          <h2>Admin</h2>
-                          <input id="senhaAdmin" type="password">
-                          <button onclick="loginAdmin()">Entrar</button>
-                          </div>
+<body>
 
-                          <div id="admin">
-                          <ul id="pendentes"></ul>
-                          <ul id="membros"></ul>
-                          </div>
+<!-- VIDEO -->
+<video autoplay loop muted playsinline id="bgVideo">
+<source src="video.mp4">
+</video>
 
-                          <div id="painelGM" class="box">
-                          <h2>👑 GM</h2>
-                          <input id="nickGM">
-                          <input id="resetGM">
-                          <button onclick="darReset()">+Reset</button>
-                          </div>
+<img src="dragon.png" class="dragon">
 
-                          <script type="module">
-                          import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-                          import { getFirestore, collection, addDoc, onSnapshot, updateDoc, deleteDoc, doc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-                          import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+<button id="btnMusica" onclick="toggleMusica()">🔊</button>
 
-                          const app = initializeApp({
-                          apiKey:"AIza...",
-                          authDomain:"fatal-guild.firebaseapp.com",
-                          projectId:"fatal-guild"
-                          });
+<!-- HUD -->
+<div id="hud">
+<div id="playerNome">👤 Player</div>
+<div style="width:200px;height:10px;background:#300;">
+<div id="hp" style="height:100%;width:100%;background:red;"></div>
+</div>
+<div style="width:200px;height:10px;background:#003;">
+<div id="mp" style="height:100%;width:100%;background:cyan;"></div>
+</div>
+</div>
 
-                          const db = getFirestore(app);
-                          const auth = getAuth(app);
+<h1>🔥 GUILD FATAL 🔥</h1>
 
-                          let ultimoEnvio = 0;
-                          let mostrarDM = true;
+<!-- LOGIN -->
+<div class="box">
+<h2>🔐 Login</h2>
+<input id="loginPlayer">
+<input id="senhaPlayer" type="password">
+<button onclick="login()">Entrar</button>
+<button onclick="logout()">Sair</button>
+</div>
 
-                          // LOGIN
-                          window.login = async ()=>{
-                          await signInWithEmailAndPassword(auth, loginPlayer.value+"@guild.com", senhaPlayer.value);
-                          alert("Logado");
-                          };
+<!-- RECUPERAR -->
+<div class="box">
+<h2>Recuperar</h2>
+<input id="emailRecuperar">
+<button onclick="recuperarSenha()">Recuperar</button>
+</div>
 
-                          // LOGOUT
-                          window.logout = ()=>signOut(auth);
+<!-- CADASTRO -->
+<div class="box">
+<h2>Criar Conta</h2>
+<input id="nome">
+<input id="classe">
+<input id="resets">
+<input id="loginConta">
+<input id="senhaConta" type="password">
+<button onclick="criarConta()">Criar Conta</button>
+</div>
 
-                          // RECUPERAR
-                          window.recuperarSenha = ()=>{
-                          sendPasswordResetEmail(auth, emailRecuperar.value+"@guild.com");
-                          alert("Email enviado");
-                          };
+<!-- CHAT -->
+<div class="box">
+<h2>Chat</h2>
+<div id="chatBox"></div>
+<input id="nickChat">
+<input id="msg">
+<button onclick="enviarMsg()">Enviar</button>
+</div>
 
-                          // CADASTRO
-                          window.criarConta = async ()=>{
-                          const user = await createUserWithEmailAndPassword(auth, loginConta.value+"@guild.com", senhaConta.value);
+<!-- DM -->
+<div class="box">
+<h2>DM</h2>
+<input id="para">
+<input id="msgPrivada">
+<button onclick="enviarDM()">Enviar</button>
+<div id="dmBox"></div>
+</div>
 
-                          await addDoc(collection(db,"membros"),{
-                          nome:nome.value,
-                          classe:classe.value,
-                          resets:Number(resets.value),
-                          uid:user.user.uid,
-                          status:"pendente",
-                          cargo:"MEMBRO"
-                          });
-                          };
+<div class="box"><ul id="ranking"></ul></div>
+<div class="box"><ul id="listaPublica"></ul></div>
+<div class="box"><ul id="historico"></ul></div>
 
-                          // CHAT
-                          window.enviarMsg = async ()=>{
-                          if(Date.now()-ultimoEnvio<2000)return alert("Sem flood");
-                          ultimoEnvio=Date.now();
+<div class="box">
+<input id="senhaAdmin" type="password">
+<button onclick="loginAdmin()">Admin</button>
+</div>
 
-                          await addDoc(collection(db,"chat"),{
-                          nick:nickChat.value,
-                          msg:msg.value
-                          });
-                          msg.value="";
-                          };
+<div id="admin">
+<button onclick="convidar()">➕ Convidar</button>
+<ul id="pendentes"></ul>
+<ul id="membros"></ul>
+</div>
 
-                          // DM
-                          window.toggleDM=()=>dmBox.style.display=mostrarDM=!mostrarDM?"block":"none";
+<div id="painelGM" class="box">
+<input id="nickGM">
+<input id="resetGM">
+<button onclick="darReset()">+Reset</button>
+</div>
 
-                          window.enviarDM=async ()=>{
-                          await addDoc(collection(db,"dm"),{
-                          de:nickChat.value,
-                          para:para.value,
-                          msg:msgPrivada.value
-                          });
-                          };
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc, onSnapshot, updateDoc, deleteDoc, doc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-                          // ADMIN
-                          window.loginAdmin=()=>{
-                          if(senhaAdmin.value==="admin123"){
-                          admin.style.display="block";
-                          painelGM.style.display="block";
-                          }
-                          };
+const app = initializeApp({
+apiKey:"AIza...",
+authDomain:"fatal-guild.firebaseapp.com",
+projectId:"fatal-guild"
+});
 
-                          // GM
-                          async function buscar(n){
-                          const s=await getDocs(collection(db,"membros"));
-                          let p=null;
-                          s.forEach(d=>{if(d.data().nome===n)p={id:d.id,...d.data()};});
-                          return p;
-                          }
+const db = getFirestore(app);
+const auth = getAuth(app);
 
-                          window.darReset=async ()=>{
-                          const p=await buscar(nickGM.value);
-                          await updateDoc(doc(db,"membros",p.id),{resets:p.resets+Number(resetGM.value)});
-                          };
+/* LOGIN */
+window.login=async()=>{await signInWithEmailAndPassword(auth,loginPlayer.value+"@guild.com",senhaPlayer.value)};
+window.logout=()=>signOut(auth);
+window.recuperarSenha=()=>sendPasswordResetEmail(auth,emailRecuperar.value+"@guild.com");
 
-                          // REALTIME
-                          onSnapshot(collection(db,"membros"),snap=>{
-                          listaPublica.innerHTML="";
-                          ranking.innerHTML="";
-                          let lista=[];
-                          snap.forEach(d=>{
-                          const data=d.data();
-                          if(data.status==="aprovado"){
-                          lista.push(data);
-                          listaPublica.innerHTML+=`<li>${data.nome}</li>`;
-                          }
-                          });
-                          lista.sort((a,b)=>b.resets-a.resets);
-                          lista.slice(0,5).forEach((p,i)=>{
-                          ranking.innerHTML+=`<li>#${i+1} ${p.nome}</li>`;
-                          });
-                          });
+/* CADASTRO */
+window.criarConta=async()=>{
+const user=await createUserWithEmailAndPassword(auth,loginConta.value+"@guild.com",senhaConta.value);
+await addDoc(collection(db,"membros"),{nome:nome.value,classe:classe.value,resets:Number(resets.value),uid:user.user.uid,status:"pendente",cargo:"MEMBRO"});
+};
 
-                          onSnapshot(collection(db,"chat"),snap=>{
-                          chatBox.innerHTML="";
-                          snap.forEach(d=>{
-                          const m=d.data();
-                          chatBox.innerHTML+=`<div><b>${m.nick}:</b> ${m.msg}</div>`;
-                          });
-                          });
+/* CHAT */
+window.enviarMsg=async()=>{
+await addDoc(collection(db,"chat"),{nick:nickChat.value,msg:msg.value});
+msg.value="";
+};
 
-                          onSnapshot(collection(db,"dm"),snap=>{
-                          dmBox.innerHTML="";
-                          snap.forEach(d=>{
-                          const m=d.data();
-                          if(m.para===nickChat.value||m.de===nickChat.value){
-                          dmBox.innerHTML+=`<div>${m.de}→${m.para}: ${m.msg}</div>`;
-                          }
-                          });
-                          });
-                          </script>
+/* DM */
+window.enviarDM=async()=>{
+await addDoc(collection(db,"dm"),{de:nickChat.value,para:para.value,msg:msgPrivada.value});
+};
 
-                          </body>
-                          </html>
+/* ADMIN */
+window.loginAdmin=()=>{
+if(senhaAdmin.value==="admin123"){
+admin.style.display="block";
+painelGM.style.display="block";
+}
+};
+
+/* CONVITE */
+window.convidar=async()=>{
+let nick=prompt("Nick:");
+if(!nick)return;
+await addDoc(collection(db,"membros"),{nome:nick,classe:"Convite",resets:0,status:"pendente",cargo:"MEMBRO"});
+};
+
+/* REALTIME */
+onSnapshot(collection(db,"membros"),snap=>{
+listaPublica.innerHTML="";
+ranking.innerHTML="";
+pendentes.innerHTML="";
+let lista=[];
+snap.forEach(d=>{
+let data=d.data(); let id=d.id;
+historico.innerHTML+=`<li>${data.nome}</li>`;
+if(data.status==="aprovado"){
+lista.push(data);
+listaPublica.innerHTML+=`<li>${data.nome}</li>`;
+}
+if(data.status==="pendente"){
+pendentes.innerHTML+=`<li>${data.nome}<button onclick="aprovar('${id}')">OK</button></li>`;
+}
+});
+lista.sort((a,b)=>b.resets-a.resets);
+lista.slice(0,5).forEach((p,i)=>ranking.innerHTML+=`<li>#${i+1} ${p.nome}</li>`);
+});
+
+/* APROVAR */
+window.aprovar=async(id)=>updateDoc(doc(db,"membros",id),{status:"aprovado"});
+
+/* PARTICULAS */
+setInterval(()=>{
+for(let i=0;i<3;i++){
+let p=document.createElement("div");
+p.className="particle";
+p.style.left=Math.random()*100+"vw";
+p.style.animationDuration=(2+Math.random()*3)+"s";
+document.body.appendChild(p);
+setTimeout(()=>p.remove(),5000);
+}
+},100);
+
+/* HUD */
+let hp=100,mp=100;
+setInterval(()=>{
+hp=Math.max(0,hp-1);
+mp=Math.max(0,mp-0.5);
+document.getElementById("hp").style.width=hp+"%";
+document.getElementById("mp").style.width=mp+"%";
+},1000);
+
+/* AUDIO */
+const video=document.getElementById("bgVideo");
+window.addEventListener("click",()=>{video.muted=false;video.play();});
+window.toggleMusica=()=>{video.muted=!video.muted;};
+</script>
+
+</body>
+</html>
