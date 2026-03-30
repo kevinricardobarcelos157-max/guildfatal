@@ -11,9 +11,6 @@ body {
   color:#fff;
   font-family: Arial;
   text-align:center;
-  transform-style:preserve-3d;
-  transition: transform 0.1s;
-  cursor: crosshair;
 }
 
 /* VIDEO */
@@ -22,103 +19,19 @@ body {
   width:100%;
   height:100%;
   object-fit:cover;
-  z-index:-2;
-  filter:brightness(0.25);
-  animation:zoomBg 20s infinite alternate;
+  z-index:-1;
+  filter:brightness(0.3);
 }
 
-@keyframes zoomBg{
-  from{ transform:scale(1); }
-  to{ transform:scale(1.15); }
-}
-
-/* GLOW */
-.glow{
-  position:fixed;
-  width:100%;
-  height:100%;
-  background:radial-gradient(circle, rgba(255,0,0,0.2), transparent 60%);
-  z-index:-3;
-  animation:pulse 3s infinite alternate;
-}
-@keyframes pulse{
-  from{opacity:0.2;}
-  to{opacity:0.7;}
-}
-
-/* DRAGAO */
-.dragon{
-  position:fixed;
-  top:15%;
-  left:-300px;
-  width:300px;
-  animation:voar 30s linear infinite;
-  z-index:5;
-}
-@keyframes voar{
-  0%{ left:-300px; transform:scale(0.8);}
-  50%{ transform:scale(1);}
-  100%{ left:110%; transform:scale(0.8);}
-}
-
-/* PARTICULAS */
-.particle{
-  position:fixed;
-  width:3px;
-  height:3px;
-  background:gold;
-  border-radius:50%;
-  animation:subir linear infinite;
-}
-@keyframes subir{
-  from{ transform:translateY(100vh); }
-  to{ transform:translateY(-10vh); opacity:0;}
-}
-
-/* UI 3D */
+/* PAINEL */
 .box{
   background:rgba(0,0,0,0.8);
   border:1px solid red;
-  box-shadow:0 0 20px red;
   margin:10px;
   padding:10px;
-  transform: translateZ(20px);
-  transition:0.3s;
 }
 
-.box:hover{
-  transform: translateZ(40px) scale(1.02);
-}
-
-/* BOTÕES */
-button{
-  background:linear-gradient(45deg,#2a0000,#8b0000);
-  color:white;
-  border:none;
-  padding:5px;
-  transition:0.3s;
-}
-
-button:hover{
-  transform:scale(1.1);
-  box-shadow:0 0 10px red,0 0 20px gold;
-}
-
-/* TITULO */
-h1{
-  color:gold;
-  text-shadow:0 0 20px red,0 0 40px gold;
-}
-
-/* MUSICA */
-#btnMusica{
-  position:fixed;
-  bottom:10px;
-  right:10px;
-  z-index:999;
-}
-
-/* 🔒 ADMIN ESCONDIDO */
+/* ADMIN ESCONDIDO */
 #admin{
   display:none;
 }
@@ -127,19 +40,13 @@ h1{
 
 <body>
 
-<div class="glow"></div>
-
-<img src="dragon.png" class="dragon">
-
 <video autoplay muted loop id="bgVideo">
   <source src="video.mp4">
 </video>
 
-<video id="bgMusic" loop muted style="display:none">
-  <source src="video.mp4">
-</video>
-
-<button id="btnMusica" onclick="toggleMusica()">🔊</button>
+<audio id="musica" loop>
+  <source src="musica.mp3">
+</audio>
 
 <h1>🔥 GUILD FATAL 🔥</h1>
 
@@ -152,7 +59,6 @@ h1{
 
 <div class="box"><ul id="ranking"></ul></div>
 <div class="box"><ul id="listaPublica"></ul></div>
-<div class="box"><ul id="historico"></ul></div>
 
 <div class="box">
 <input id="senha" type="password" placeholder="Senha admin">
@@ -161,25 +67,23 @@ h1{
 
 <div id="admin">
 <ul id="pendentes"></ul>
-<ul id="membros"></ul>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, onSnapshot, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-const app=initializeApp({apiKey:"AIza...",authDomain:"fatal-guild.firebaseapp.com",projectId:"fatal-guild"});
+const app=initializeApp({
+  apiKey:"AIza...",
+  authDomain:"fatal-guild.firebaseapp.com",
+  projectId:"fatal-guild"
+});
 const db=getFirestore(app);
 
-/* 🔥 LOGIN CORRIGIDO */
+/* LOGIN ADMIN (CORRIGIDO) */
 window.login = () => {
   const senhaInput = document.getElementById("senha");
   const adminPanel = document.getElementById("admin");
-
-  if (!senhaInput || !adminPanel) {
-    console.error("Erro: elemento não encontrado");
-    return;
-  }
 
   if (senhaInput.value === "admin123") {
     adminPanel.style.display = "block";
@@ -188,64 +92,57 @@ window.login = () => {
   }
 };
 
-/* RESTO DO SISTEMA */
-window.enviar=async()=>{await addDoc(collection(db,"membros"),{nome:nome.value,classe:classe.value,resets:Number(resets.value),status:"pendente",cargo:"MEMBRO"})};
-window.aprovar=async(id)=>updateDoc(doc(db,"membros",id),{status:"aprovado"});
-window.cargo=async(id,c)=>updateDoc(doc(db,"membros",id),{cargo:c});
-window.banir=async(id)=>updateDoc(doc(db,"membros",id),{cargo:"BANIDO"});
-window.remover=async(id)=>deleteDoc(doc(db,"membros",id));
+/* CADASTRO */
+window.enviar = async () => {
+  await addDoc(collection(db,"membros"),{
+    nome:nome.value,
+    classe:classe.value,
+    resets:Number(resets.value),
+    status:"pendente"
+  });
+};
 
+/* LISTAGEM */
 onSnapshot(collection(db,"membros"),snap=>{
-listaPublica.innerHTML="";
-ranking.innerHTML="";
-pendentes.innerHTML="";
-membros.innerHTML="";
-historico.innerHTML="";
-let lista=[];
-snap.forEach(d=>{
-let data=d.data(); let id=d.id;
-historico.innerHTML+=`<li>${data.nome}</li>`;
-if(data.status==="aprovado"){
-lista.push(data);
-listaPublica.innerHTML+=`<li>${data.nome}</li>`;
-}
-if(data.status==="pendente"){
-pendentes.innerHTML+=`<li>${data.nome}<button onclick="aprovar('${id}')">OK</button></li>`;
-}
-});
-lista.sort((a,b)=>b.resets-a.resets);
-lista.slice(0,5).forEach((p,i)=>ranking.innerHTML+=`<li>#${i+1} ${p.nome}</li>`);
+  listaPublica.innerHTML="";
+  ranking.innerHTML="";
+  pendentes.innerHTML="";
+  let lista=[];
+
+  snap.forEach(d=>{
+    let data=d.data();
+    let id=d.id;
+
+    if(data.status==="aprovado"){
+      lista.push(data);
+      listaPublica.innerHTML+=`<li>${data.nome}</li>`;
+    }
+
+    if(data.status==="pendente"){
+      pendentes.innerHTML+=`
+        <li>${data.nome}
+        <button onclick="aprovar('${id}')">OK</button>
+        </li>`;
+    }
+  });
+
+  lista.sort((a,b)=>b.resets-a.resets);
+  lista.slice(0,5).forEach((p,i)=>{
+    ranking.innerHTML+=`<li>#${i+1} ${p.nome} (${p.resets})</li>`;
+  });
 });
 
-/* PARTICULAS */
-setInterval(()=>{
-let p=document.createElement("div");
-p.className="particle";
-p.style.left=Math.random()*100+"vw";
-p.style.animationDuration=(2+Math.random()*4)+"s";
-document.body.appendChild(p);
-setTimeout(()=>p.remove(),6000);
-},100);
-
-/* PARALLAX */
-document.addEventListener("mousemove",(e)=>{
-let x=(e.clientX/window.innerWidth-0.5);
-let y=(e.clientY/window.innerHeight-0.5);
-document.body.style.transform=`rotateY(${x*6}deg) rotateX(${-y*6}deg)`;
-});
-
-/* SOM CLIQUE */
-document.addEventListener("click",()=>{
-let audio=new Audio("click.mp3");
-audio.volume=0.3;
-audio.play();
-});
+/* APROVAR */
+window.aprovar = async (id) => {
+  await updateDoc(doc(db,"membros",id),{status:"aprovado"});
+};
 
 /* MUSICA */
-const musica=document.getElementById("bgMusic");
-window.addEventListener("click",()=>{musica.muted=false;musica.play();});
-window.toggleMusica=()=>{musica.paused?musica.play():musica.pause();};
+const musica = document.getElementById("musica");
+document.addEventListener("click",()=>{
+  musica.play();
+});
 </script>
 
 </body>
-  </html>
+</html>
