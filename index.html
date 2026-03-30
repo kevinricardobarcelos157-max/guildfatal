@@ -51,18 +51,6 @@ body{
   animation: glowDark 2s infinite alternate;
 }
 
-#tituloCentral h1::after{
-  content:"";
-  position:absolute;
-  left:0;
-  right:0;
-  top:100%;
-  height:20px;
-  background:linear-gradient(to bottom, rgba(139,0,0,0.8), transparent);
-  filter:blur(2px);
-  animation:sangue 2s infinite alternate;
-}
-
 #subTitulo{
   margin-top:5px;
   font-size:18px;
@@ -142,6 +130,20 @@ body{
   padding:15px;
 }
 
+/* 🔥 NOVO ESTILO INPUT */
+input{
+  width:90%;
+  padding:8px;
+  background:#111;
+  border:1px solid red;
+  color:white;
+  outline:none;
+}
+
+input:focus{
+  box-shadow:0 0 10px red;
+}
+
 .btnMU{
   padding:10px;
   background:linear-gradient(45deg,#3a0000,#a00000);
@@ -174,11 +176,6 @@ body{
   to{ text-shadow:2px 2px 0 #000, 4px 4px 0 #330000, 6px 6px 0 #660000, 0 0 25px red;}
 }
 
-@keyframes sangue{
-  from{ height:10px; opacity:0.6;}
-  to{ height:25px; opacity:1;}
-}
-
 @keyframes pulseGlow{
   from{ filter:drop-shadow(0 0 15px red);}
   to{ filter:drop-shadow(0 0 35px red);}
@@ -196,7 +193,7 @@ body{
 
 <body>
 
-<video id="bgVideo" autoplay loop>
+<video id="bgVideo" autoplay muted loop>
   <source src="bg_compressed.mp4" type="video/mp4">
 </video>
 
@@ -232,64 +229,68 @@ body{
     <button class="btnMU">Cadastrar personagem</button>
   </div>
 
-  <div class="box">
-    <h3>🏆 Ranking</h3>
-  </div>
-
-  <div class="box">
-    <h3>📜 Membros</h3>
-  </div>
+  <div class="box"><h3>🏆 Ranking</h3></div>
+  <div class="box"><h3>📜 Membros</h3></div>
 
 </div>
 
 <script>
-// ===== API =====
 const API = "https://fatalguild-api.onrender.com";
-
-// ===== MODO =====
-let modo = 3;
 
 const inputs = document.querySelectorAll("input");
 const botoes = document.querySelectorAll(".btnMU");
 
-const clickSound = new Audio("https://www.soundjay.com/mechanical/sounds/sword-1.mp3");
-
-// BOTÕES
-botoes.forEach(btn=>{
-  btn.addEventListener("click", ()=>{
-    clickSound.currentTime = 0;
-    clickSound.play();
-    btn.style.transform="scale(0.9)";
-    setTimeout(()=>btn.style.transform="scale(1)",200);
-  });
-});
-
 // CADASTRO
 botoes[0].onclick = async () => {
-  const res = await fetch(API+"/register",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      email:inputs[0].value,
-      senha:inputs[1].value
-    })
-  });
-  const data = await res.json();
-  if(data.erro){ alert(data.erro); } else { tremerTela(); alert("Conta criada!"); }
+  try{
+    const res = await fetch(API+"/register",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        email:inputs[0].value,
+        senha:inputs[1].value
+      })
+    });
+
+    const data = await res.json();
+    console.log("REGISTER:", data);
+
+    if(data.erro){
+      alert(data.erro);
+    }else{
+      tremerTela();
+      alert("Conta criada!");
+    }
+  }catch(e){
+    alert("Erro na API!");
+  }
 };
 
-// LOGIN
+// LOGIN 🔥 CORRIGIDO
 botoes[1].onclick = async () => {
-  const res = await fetch(API+"/login",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      email:inputs[0].value,
-      senha:inputs[1].value
-    })
-  });
-  const data = await res.json();
-  if(data.ok){ tremerTela(); alert("🔥 BEM-VINDO 🔥"); } else { alert("Erro!"); }
+  try{
+    const res = await fetch(API+"/login",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        email:inputs[0].value,
+        senha:inputs[1].value
+      })
+    });
+
+    const data = await res.json();
+    console.log("LOGIN:", data);
+
+    if(data && (data.ok || data.user || !data.erro)){
+      tremerTela();
+      alert("🔥 BEM-VINDO 🔥");
+    }else{
+      alert(data.erro || "Erro no login");
+    }
+
+  }catch(e){
+    alert("Servidor offline ou erro!");
+  }
 };
 
 // PERSONAGEM
@@ -306,45 +307,47 @@ botoes[2].onclick = async () => {
   atualizarSistema();
 };
 
-// SISTEMA
+// RANKING
 async function atualizarSistema(){
-  const res = await fetch(API+"/ranking");
-  const lista = await res.json();
+  try{
+    const res = await fetch(API+"/ranking");
+    const lista = await res.json();
 
-  const rankingBox = document.querySelectorAll(".box")[2];
-  const membrosBox = document.querySelectorAll(".box")[3];
+    const rankingBox = document.querySelectorAll(".box")[2];
+    const membrosBox = document.querySelectorAll(".box")[3];
 
-  let rankingHTML = "<h3>🏆 Ranking</h3>";
-  let membrosHTML = "<h3>📜 Membros</h3>";
+    let rankingHTML = "<h3>🏆 Ranking</h3>";
+    let membrosHTML = "<h3>📜 Membros</h3>";
 
-  lista.forEach((p,i)=>{
-    rankingHTML += i===0
-      ? `<p style="color:gold;">👑 ${p.nick} - ${p.resets}</p>`
-      : `<p>${p.nick} - ${p.resets}</p>`;
+    lista.forEach((p,i)=>{
+      rankingHTML += i===0
+        ? `<p style="color:gold;">👑 ${p.nick} - ${p.resets}</p>`
+        : `<p>${p.nick} - ${p.resets}</p>`;
 
-    membrosHTML += `<p>${p.nick} (${p.classe})</p>`;
-  });
+      membrosHTML += `<p>${p.nick} (${p.classe})</p>`;
+    });
 
-  rankingBox.innerHTML = rankingHTML;
-  membrosBox.innerHTML = membrosHTML;
+    rankingBox.innerHTML = rankingHTML;
+    membrosBox.innerHTML = membrosHTML;
+
+  }catch(e){
+    console.log("Erro ranking");
+  }
 }
 
-// TREMER
 function tremerTela(){
   document.body.style.animation="tremer 0.3s";
   setTimeout(()=>document.body.style.animation="",300);
 }
 
-// VIDEO
 document.body.addEventListener("click", ()=>{
   const video = document.getElementById("bgVideo");
   video.muted = false;
   video.play();
 });
 
-// FOGO
+// fogo
 const fire = document.getElementById("fire");
-
 setInterval(()=>{
   const p = document.createElement("div");
   p.className="fireParticle";
@@ -353,10 +356,9 @@ setInterval(()=>{
   setTimeout(()=>p.remove(),2000);
 },100);
 
-// UPDATE
 setInterval(atualizarSistema,3000);
 atualizarSistema();
 </script>
 
 </body>
-</html>
+                     </html>
