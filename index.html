@@ -5,143 +5,145 @@
 <title>Guild Fatal</title>
 
 <style>
-body {
-    margin: 0;
-    font-family: Arial;
-    color: white;
-    text-align: center;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, sans-serif;
 }
 
-/* VIDEO FUNDO AJUSTADO */
-#bgVideo {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: -1;
+body{
+  overflow:hidden;
+  color:white;
 }
 
-/* CONTEÚDO CENTRAL */
-.container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+/* VIDEO FUNDO */
+#bgVideo{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  z-index:-1;
+  filter:brightness(0.7);
+}
+
+/* CENTRAL */
+.container{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  text-align:center;
+}
+
+/* TITULO */
+h1{
+  font-size:48px;
+  color:#00bfff;
+  text-shadow:0 0 20px #00bfff;
 }
 
 /* BOX */
-.box {
-    background: rgba(0,0,0,0.7);
-    border: 1px solid red;
-    padding: 25px;
-    margin: 10px;
+.box{
+  background:rgba(0,0,0,0.7);
+  padding:25px;
+  border-radius:15px;
+  box-shadow:0 0 20px #00bfff;
 }
 
 /* INPUT */
-input {
-    padding: 12px;
-    margin: 5px;
-    width: 220px;
+input{
+  display:block;
+  margin:10px auto;
+  padding:10px;
+  width:250px;
+  border:none;
+  border-radius:5px;
 }
 
-/* BOTÃO GAMER */
-button {
-    padding: 12px 25px;
-    margin: 5px;
-    border: none;
-    background: linear-gradient(45deg, #00f, #0ff);
-    color: white;
-    cursor: pointer;
-    transition: 0.3s;
-    font-weight: bold;
+/* BOTÃO */
+button{
+  margin:10px;
+  padding:10px 20px;
+  border:none;
+  border-radius:10px;
+  background:#00bfff;
+  color:white;
+  cursor:pointer;
+  transition:0.3s;
 }
 
-button:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 15px #0ff;
-}
-
-/* TÍTULOS */
-h1 {
-    font-size: 45px;
-    color: gold;
-    text-shadow: 0 0 15px orange;
-}
-
-h3 {
-    font-size: 22px;
+button:hover{
+  transform:translateY(-5px);
+  box-shadow:0 10px 20px #00bfff;
 }
 </style>
 </head>
 
 <body>
 
-<!-- VIDEO COM SOM -->
-<video autoplay loop playsinline id="bgVideo" controls>
-    <source src="bg_compressed.mp4" type="video/mp4">
+<!-- VIDEO -->
+<video id="bgVideo" autoplay loop playsinline controls>
+  <source src="bg_compressed.mp4" type="video/mp4">
 </video>
 
 <div class="container">
-    <h1>🔥 GUILD FATAL 🔥</h1>
 
-    <div class="box">
-        <h3>Login / Cadastro</h3>
+<h1>🔥 GUILD FATAL 🔥</h1>
 
-        <input id="email" placeholder="Email"><br>
-        <input id="senha" type="password" placeholder="Senha"><br>
+<div class="box">
+  <h3>Login / Cadastro</h3>
 
-        <button onclick="login()">Entrar</button>
-        <button onclick="criarConta()">Criar Conta</button>
-    </div>
+  <input id="email" placeholder="Email">
+  <input id="senha" type="password" placeholder="Senha">
+
+  <button onclick="login()">Entrar</button>
+  <button onclick="criarConta()">Criar Conta</button>
 </div>
 
-<!-- FIREBASE -->
+</div>
+
+<!-- FIREBASE CORRETO -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "SUA_API_KEY",
-  authDomain: "SEU-PROJETO.firebaseapp.com",
-  projectId: "SEU-PROJETO",
-  storageBucket: "SEU-PROJETO.appspot.com",
-  messagingSenderId: "XXXX",
-  appId: "XXXX"
+  apiKey: "AIzaSyBUPcIonbLaTWv6SnhbZghlU51Tx6MT0z8",
+  authDomain: "fatal-guild.firebaseapp.com",
+  projectId: "fatal-guild",
+  storageBucket: "fatal-guild.firebasestorage.app",
+  messagingSenderId: "67435581794",
+  appId: "1:67435581794:web:d13913ab32cb04a5bddc3b",
+  measurementId: "G-X05T2S8MV0"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 // CRIAR CONTA
-window.criarConta = function() {
-    const email = document.getElementById("email").value;
-    const senha = document.getElementById("senha").value;
+window.criarConta = function(){
+  const email = document.getElementById("email").value;
+  const senha = document.getElementById("senha").value;
 
-    createUserWithEmailAndPassword(auth, email, senha)
-    .then(() => {
-        alert("Conta criada com sucesso!");
-    })
-    .catch(error => {
-        alert(error.message);
-    });
+  createUserWithEmailAndPassword(auth, email, senha)
+  .then(() => alert("Conta criada com sucesso!"))
+  .catch(err => alert(err.message));
 }
 
 // LOGIN
-window.login = function() {
-    const email = document.getElementById("email").value;
-    const senha = document.getElementById("senha").value;
+window.login = function(){
+  const email = document.getElementById("email").value;
+  const senha = document.getElementById("senha").value;
 
-    signInWithEmailAndPassword(auth, email, senha)
-    .then(() => {
-        alert("Login realizado!");
-    })
-    .catch(error => {
-        alert(error.message);
-    });
+  signInWithEmailAndPassword(auth, email, senha)
+  .then(() => alert("Login realizado!"))
+  .catch(err => alert(err.message));
 }
 </script>
 
 </body>
-    </html>
+</html>
