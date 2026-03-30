@@ -2,249 +2,159 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>🔥 Guild Fatal GOD 🔥</title>
+<title>🔥 Guild Fatal 🔥</title>
 
 <style>
-body {
+body{
   margin:0;
-    background:black;
-      color:#fff;
-        font-family: Arial;
-          text-align:center;
-            transform-style:preserve-3d;
-              transition: transform 0.1s;
-                cursor: crosshair;
-                }
+    font-family:Arial;
+      color:white;
+        text-align:center;
+        }
 
-                /* VIDEO FUNDO */
-                #bgVideo{
-                  position:fixed;
-                    width:100%;
-                      height:100%;
-                        object-fit:cover;
-                          z-index:-2;
-                            filter:brightness(0.3) contrast(1.2);
-                              animation:zoomBg 20s infinite alternate;
-                              }
+        /* VIDEO FUNDO */
+        #bgVideo{
+          position:fixed;
+            top:0;
+              left:0;
+                width:100vw;
+                  height:100vh;
+                    object-fit:cover;
+                      z-index:-1;
+                        filter:brightness(0.4);
+                        }
 
-                              @keyframes zoomBg{
-                                from{ transform:scale(1); }
-                                  to{ transform:scale(1.1); }
-                                  }
+                        /* BOX */
+                        .box{
+                          background:rgba(0,0,0,0.7);
+                            border:1px solid red;
+                              margin:10px;
+                                padding:10px;
+                                }
 
-                                  /* GLOW */
-                                  .glow{
-                                    position:fixed;
-                                      width:100%;
-                                        height:100%;
-                                          background:radial-gradient(circle, rgba(255,0,0,0.2), transparent 60%);
-                                            z-index:-3;
-                                              animation:pulse 3s infinite alternate;
-                                              }
-                                              @keyframes pulse{
-                                                from{opacity:0.2;}
-                                                  to{opacity:0.6;}
-                                                  }
+                                input,button{
+                                  padding:8px;
+                                    margin:5px;
+                                    }
 
-                                                  /* PARTICULAS */
-                                                  .particle{
-                                                    position:fixed;
-                                                      width:3px;
-                                                        height:3px;
-                                                          background:gold;
-                                                            border-radius:50%;
-                                                              animation:subir linear infinite;
-                                                              }
-                                                              @keyframes subir{
-                                                                from{ transform:translateY(100vh); }
-                                                                  to{ transform:translateY(-10vh); opacity:0;}
+                                    h1{
+                                      color:gold;
+                                      }
+                                      </style>
+                                      </head>
+
+                                      <body>
+
+                                      <!-- VIDEO -->
+                                      <video autoplay muted loop playsinline id="bgVideo">
+                                        <source src="bg.mp4" type="video/mp4">
+                                        </video>
+
+                                        <h1>🔥 GUILD FATAL 🔥</h1>
+
+                                        <!-- LOGIN -->
+                                        <div class="box">
+                                        <h3>Login</h3>
+                                        <input id="loginUser" placeholder="Usuário">
+                                        <input id="loginPass" type="password" placeholder="Senha">
+                                        <br>
+                                        <button onclick="entrar()">Entrar</button>
+                                        <button onclick="mostrarCadastro()">Criar Conta</button>
+                                        <button onclick="mostrarReset()">Recuperar Senha</button>
+                                        </div>
+
+                                        <!-- CADASTRO -->
+                                        <div class="box" id="cadastroBox" style="display:none">
+                                        <h3>Criar Conta</h3>
+                                        <input id="novoUser" placeholder="Usuário">
+                                        <input id="novoPass" type="password" placeholder="Senha">
+                                        <button onclick="criarConta()">Criar</button>
+                                        </div>
+
+                                        <!-- RESET -->
+                                        <div class="box" id="resetBox" style="display:none">
+                                        <h3>Recuperar Senha</h3>
+                                        <input id="resetUser" placeholder="Usuário">
+                                        <button onclick="resetar()">Recuperar</button>
+                                        <p id="resetMsg"></p>
+                                        </div>
+
+                                        <!-- GUILD -->
+                                        <div class="box" id="guildBox" style="display:none">
+                                        <h3>Entrar na Guild</h3>
+                                        <input id="nome" placeholder="Nick">
+                                        <input id="classe" placeholder="Classe">
+                                        <input id="resets" placeholder="Resets">
+                                        <button onclick="add()">Adicionar</button>
+                                        </div>
+
+                                        <!-- RANKING -->
+                                        <div class="box">
+                                        <h3>Ranking</h3>
+                                        <ul id="lista"></ul>
+                                        </div>
+
+                                        <script>
+                                        let contas = JSON.parse(localStorage.getItem("contas")) || [];
+                                        let guild = JSON.parse(localStorage.getItem("guild")) || [];
+
+                                        /* LIBERAR SOM DO VIDEO */
+                                        document.addEventListener("click", ()=>{
+                                          let v = document.getElementById("bgVideo");
+                                            v.muted = false;
+                                              v.play();
+                                              });
+
+                                              /* LOGIN */
+                                              function entrar(){
+                                                let user = contas.find(c => c.user === loginUser.value && c.pass === loginPass.value);
+                                                  if(user){
+                                                      alert("Entrou!");
+                                                          guildBox.style.display="block";
+                                                            } else {
+                                                                alert("Login errado");
+                                                                  }
                                                                   }
 
-                                                                  /* UI */
-                                                                  .box{
-                                                                    background:rgba(0,0,0,0.8);
-                                                                      border:1px solid red;
-                                                                        box-shadow:0 0 15px red;
-                                                                          margin:10px;
-                                                                            padding:10px;
-                                                                              transform: translateZ(20px);
-                                                                                transition:0.3s;
-                                                                                }
+                                                                  /* CADASTRO */
+                                                                  function criarConta(){
+                                                                    contas.push({user:novoUser.value, pass:novoPass.value});
+                                                                      localStorage.setItem("contas", JSON.stringify(contas));
+                                                                        alert("Conta criada!");
+                                                                        }
 
-                                                                                .box:hover{
-                                                                                  transform: translateZ(35px) scale(1.02);
-                                                                                  }
+                                                                        /* RESET */
+                                                                        function resetar(){
+                                                                          let user = contas.find(c => c.user === resetUser.value);
+                                                                            resetMsg.innerText = user ? "Senha: "+user.pass : "Não encontrado";
+                                                                            }
 
-                                                                                  /* BOTÕES */
-                                                                                  button{
-                                                                                    background:linear-gradient(45deg,#2a0000,#8b0000);
-                                                                                      color:white;
-                                                                                        border:none;
-                                                                                          padding:6px;
-                                                                                          }
+                                                                            /* GUILD */
+                                                                            function add(){
+                                                                              guild.push({
+                                                                                  nome:nome.value,
+                                                                                      classe:classe.value,
+                                                                                          resets:Number(resets.value)
+                                                                                            });
+                                                                                              localStorage.setItem("guild", JSON.stringify(guild));
+                                                                                                render();
+                                                                                                }
 
-                                                                                          button:hover{
-                                                                                            transform:scale(1.05);
-                                                                                              box-shadow:0 0 10px red;
-                                                                                              }
+                                                                                                /* RANKING */
+                                                                                                function render(){
+                                                                                                  lista.innerHTML="";
+                                                                                                    guild.sort((a,b)=>b.resets-a.resets);
+                                                                                                      guild.forEach(p=>{
+                                                                                                          lista.innerHTML += `<li>${p.nome} - ${p.resets}</li>`;
+                                                                                                            });
+                                                                                                            }
 
-                                                                                              /* TITULO */
-                                                                                              h1{
-                                                                                                color:gold;
-                                                                                                  text-shadow:0 0 20px red;
-                                                                                                  }
+                                                                                                            /* UI */
+                                                                                                            function mostrarCadastro(){ cadastroBox.style.display="block"; }
+                                                                                                            function mostrarReset(){ resetBox.style.display="block"; }
 
-                                                                                                  /* MUSICA */
-                                                                                                  #btnMusica{
-                                                                                                    position:fixed;
-                                                                                                      bottom:10px;
-                                                                                                        right:10px;
-                                                                                                          z-index:999;
-                                                                                                          }
-                                                                                                          </style>
-                                                                                                          </head>
+                                                                                                            render();
+                                                                                                            </script>
 
-                                                                                                          <body>
-
-                                                                                                          <div class="glow"></div>
-
-                                                                                                          <!-- 🔥 SEU VIDEO AQUI -->
-                                                                                                          <video autoplay muted loop id="bgVideo">
-                                                                                                            <source src="bg.mp4" type="video/mp4">
-                                                                                                            </video>
-
-                                                                                                            <audio id="bgMusic" loop>
-                                                                                                              <source src="https://www.soundjay.com/buttons/sounds/button-16.mp3">
-                                                                                                              </audio>
-
-                                                                                                              <button id="btnMusica" onclick="toggleMusica()">🔊</button>
-
-                                                                                                              <h1>🔥 GUILD FATAL 🔥</h1>
-
-                                                                                                              <div class="box">
-                                                                                                              <input id="nome" placeholder="Nick">
-                                                                                                              <input id="classe" placeholder="Classe">
-                                                                                                              <input id="resets" placeholder="Resets" type="number">
-                                                                                                              <button onclick="enviar()">Entrar</button>
-                                                                                                              </div>
-
-                                                                                                              <div class="box"><ul id="ranking"></ul></div>
-                                                                                                              <div class="box"><ul id="listaPublica"></ul></div>
-                                                                                                              <div class="box"><ul id="historico"></ul></div>
-
-                                                                                                              <div class="box">
-                                                                                                              <input id="senha" type="password">
-                                                                                                              <button onclick="login()">Admin</button>
-                                                                                                              </div>
-
-                                                                                                              <div id="admin" style="display:none">
-                                                                                                              <ul id="pendentes"></ul>
-                                                                                                              <ul id="membros"></ul>
-                                                                                                              </div>
-
-                                                                                                              <script type="module">
-                                                                                                              import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-                                                                                                              import { getFirestore, collection, addDoc, onSnapshot, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-                                                                                                              const app=initializeApp({
-                                                                                                                apiKey:"AIza...",
-                                                                                                                  authDomain:"fatal-guild.firebaseapp.com",
-                                                                                                                    projectId:"fatal-guild"
-                                                                                                                    });
-                                                                                                                    const db=getFirestore(app);
-
-                                                                                                                    /* LOGIN */
-                                                                                                                    window.login=()=>{
-                                                                                                                      if(senha.value==="admin123"){
-                                                                                                                          admin.style.display="block";
-                                                                                                                            }else{
-                                                                                                                                alert("Senha errada");
-                                                                                                                                  }
-                                                                                                                                  };
-
-                                                                                                                                  /* ENVIAR */
-                                                                                                                                  window.enviar=async()=>{
-                                                                                                                                    if(!nome.value || !classe.value || !resets.value){
-                                                                                                                                        alert("Preencha tudo!");
-                                                                                                                                            return;
-                                                                                                                                              }
-
-                                                                                                                                                await addDoc(collection(db,"membros"),{
-                                                                                                                                                    nome:nome.value.trim(),
-                                                                                                                                                        classe:classe.value.trim(),
-                                                                                                                                                            resets:Number(resets.value),
-                                                                                                                                                                status:"pendente",
-                                                                                                                                                                    cargo:"MEMBRO"
-                                                                                                                                                                      });
-                                                                                                                                                                      };
-
-                                                                                                                                                                      /* AÇÕES */
-                                                                                                                                                                      window.aprovar=id=>updateDoc(doc(db,"membros",id),{status:"aprovado"});
-                                                                                                                                                                      window.remover=id=>deleteDoc(doc(db,"membros",id));
-
-                                                                                                                                                                      /* LISTA */
-                                                                                                                                                                      onSnapshot(collection(db,"membros"),snap=>{
-                                                                                                                                                                        listaPublica.innerHTML="";
-                                                                                                                                                                          ranking.innerHTML="";
-                                                                                                                                                                            pendentes.innerHTML="";
-                                                                                                                                                                              historico.innerHTML="";
-
-                                                                                                                                                                                let lista=[];
-
-                                                                                                                                                                                  snap.forEach(d=>{
-                                                                                                                                                                                      let data=d.data();
-                                                                                                                                                                                          let id=d.id;
-
-                                                                                                                                                                                              historico.innerHTML+=`<li>${data.nome}</li>`;
-
-                                                                                                                                                                                                  if(data.status==="aprovado"){
-                                                                                                                                                                                                        lista.push(data);
-                                                                                                                                                                                                              listaPublica.innerHTML+=`<li>${data.nome}</li>`;
-                                                                                                                                                                                                                  }
-
-                                                                                                                                                                                                                      if(data.status==="pendente"){
-                                                                                                                                                                                                                            pendentes.innerHTML+=`<li>${data.nome} <button onclick="aprovar('${id}')">OK</button></li>`;
-                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                  });
-
-                                                                                                                                                                                                                                    lista.sort((a,b)=>b.resets-a.resets);
-
-                                                                                                                                                                                                                                      lista.slice(0,5).forEach((p,i)=>{
-                                                                                                                                                                                                                                          ranking.innerHTML+=`<li>#${i+1} ${p.nome}</li>`;
-                                                                                                                                                                                                                                            });
-                                                                                                                                                                                                                                            });
-
-                                                                                                                                                                                                                                            /* PARTICULAS */
-                                                                                                                                                                                                                                            setInterval(()=>{
-                                                                                                                                                                                                                                              if(document.hidden) return;
-
-                                                                                                                                                                                                                                                let p=document.createElement("div");
-                                                                                                                                                                                                                                                  p.className="particle";
-                                                                                                                                                                                                                                                    p.style.left=Math.random()*100+"vw";
-                                                                                                                                                                                                                                                      p.style.animationDuration=(2+Math.random()*3)+"s";
-
-                                                                                                                                                                                                                                                        document.body.appendChild(p);
-                                                                                                                                                                                                                                                          setTimeout(()=>p.remove(),5000);
-                                                                                                                                                                                                                                                          },200);
-
-                                                                                                                                                                                                                                                          /* PARALLAX */
-                                                                                                                                                                                                                                                          document.addEventListener("mousemove",(e)=>{
-                                                                                                                                                                                                                                                            let x=(e.clientX/window.innerWidth-0.5);
-                                                                                                                                                                                                                                                              let y=(e.clientY/window.innerHeight-0.5);
-                                                                                                                                                                                                                                                                document.body.style.transform=`rotateY(${x*5}deg) rotateX(${-y*5}deg)`;
-                                                                                                                                                                                                                                                                });
-
-                                                                                                                                                                                                                                                                /* MUSICA */
-                                                                                                                                                                                                                                                                const musica=document.getElementById("bgMusic");
-
-                                                                                                                                                                                                                                                                window.addEventListener("click",()=>{
-                                                                                                                                                                                                                                                                  musica.play().catch(()=>{});
-                                                                                                                                                                                                                                                                  });
-
-                                                                                                                                                                                                                                                                  window.toggleMusica=()=>{
-                                                                                                                                                                                                                                                                    musica.paused?musica.play():musica.pause();
-                                                                                                                                                                                                                                                                    };
-                                                                                                                                                                                                                                                                    </script>
-
-                                                                                                                                                                                                                                                                    </body>
-                                                                                                                                                                                                                                                                    </html>
+                                                                                                            </body>
+                                                                                                            </html>
