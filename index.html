@@ -11,60 +11,44 @@ body{
   color:white;
   text-align:center;
   overflow:hidden;
+  background:black;
 }
 
 /* VIDEO */
 #bgVideo{
   position:fixed;
-  width:100%;
-  height:100%;
+  top:0;
+  left:0;
+  width:100vw;
+  height:100vh;
   object-fit:cover;
-  z-index:-2;
-  filter:brightness(0.35);
-}
-
-/* DRAGAO */
-.dragon{
-  position:fixed;
-  top:20%;
-  left:-300px;
-  width:300px;
-  animation:voar 25s linear infinite;
-  z-index:5;
-}
-@keyframes voar{
-  0%{ left:-300px; }
-  100%{ left:110%; }
+  z-index:-1;
+  filter:brightness(0.4);
 }
 
 /* TITULO */
 #tituloCentral{
   position:fixed;
-  top:40%;
+  top:30%;
   left:50%;
   transform:translate(-50%, -50%);
   z-index:10;
 }
 
 #tituloCentral h1{
-  font-size:60px;
+  font-size:50px;
   color:gold;
-  animation:pulse 2s infinite alternate;
   text-shadow:0 0 20px red,0 0 40px gold;
 }
 
-@keyframes pulse{
-  from{ transform:scale(1); }
-  to{ transform:scale(1.1); }
-}
-
-/* BOTÃO */
-.btnMU{
-  padding:12px;
-  background:linear-gradient(45deg,#3a0000,#a00000);
-  border:none;
-  color:white;
-  cursor:pointer;
+/* CENTRALIZA TUDO */
+#container{
+  position:fixed;
+  top:55%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  width:90%;
+  max-width:400px;
 }
 
 /* BOX */
@@ -72,76 +56,58 @@ body{
   background:rgba(0,0,0,0.85);
   border:1px solid red;
   margin:10px;
+  padding:15px;
+}
+
+/* BOTÃO */
+.btnMU{
   padding:10px;
-}
-
-/* ADMIN */
-#adminPanel{
-  display:none;
-}
-
-/* PARTICULAS */
-.particle{
-  position:fixed;
-  width:3px;
-  height:3px;
-  background:gold;
-  border-radius:50%;
-  animation:subir linear infinite;
-}
-@keyframes subir{
-  from{ transform:translateY(100vh); }
-  to{ transform:translateY(-10vh); opacity:0;}
+  background:linear-gradient(45deg,#3a0000,#a00000);
+  border:none;
+  color:white;
+  margin-top:5px;
+  width:100%;
 }
 </style>
 </head>
 
 <body>
 
+<!-- VIDEO -->
 <video id="bgVideo" autoplay loop muted>
   <source src="bg_compressed.mp4" type="video/mp4">
 </video>
 
-<img src="dragon.png" class="dragon">
-
+<!-- TITULO -->
 <div id="tituloCentral">
   <h1>🔥 GUILD FATAL 🔥</h1>
 </div>
 
-<!-- LOGIN REAL -->
-<div class="box">
-  <h3>Conta</h3>
-  <input id="email" placeholder="Email">
-  <input id="senhaConta" type="password" placeholder="Senha">
-  <button class="btnMU" onclick="registrar()">Cadastrar</button>
-  <button class="btnMU" onclick="entrarConta()">Entrar</button>
-</div>
+<!-- CONTAINER CENTRAL -->
+<div id="container">
 
-<!-- SISTEMA -->
-<div id="sistema">
-
+  <!-- LOGIN CONTA -->
   <div class="box">
-    <input id="nome" placeholder="Nick">
-    <input id="classe" placeholder="Classe">
-    <input id="resets" placeholder="Resets">
+    <h3>Conta</h3>
+    <input id="email" placeholder="Email"><br><br>
+    <input id="senhaConta" type="password" placeholder="Senha"><br><br>
+    <button class="btnMU" onclick="registrar()">Cadastrar</button>
+    <button class="btnMU" onclick="entrarConta()">Entrar</button>
+  </div>
+
+  <!-- CADASTRO PERSONAGEM -->
+  <div class="box">
+    <input id="nome" placeholder="Nick"><br><br>
+    <input id="classe" placeholder="Classe"><br><br>
+    <input id="resets" placeholder="Resets"><br><br>
     <button class="btnMU" onclick="enviar()">Cadastrar personagem</button>
   </div>
 
-  <div class="box">
-    <ul id="ranking"></ul>
-  </div>
-
-</div>
-
-<!-- ADMIN -->
-<div id="adminPanel" class="box">
-  <h3>Admin</h3>
-  <ul id="pendentes"></ul>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const app=initializeApp({
@@ -153,13 +119,13 @@ const app=initializeApp({
 const db=getFirestore(app);
 const auth=getAuth(app);
 
-/* SOM */
+/* SOM DO VIDEO */
 document.addEventListener("click",()=>{
   bgVideo.muted=false;
   bgVideo.play();
 });
 
-/* LOGIN REAL */
+/* CONTA */
 window.registrar = () =>{
   createUserWithEmailAndPassword(auth,email.value,senhaConta.value)
   .then(()=>alert("Conta criada"))
@@ -172,62 +138,15 @@ window.entrarConta = () =>{
   .catch(e=>alert(e.message));
 };
 
-/* CADASTRO */
+/* PERSONAGEM */
 window.enviar = async () => {
   await addDoc(collection(db,"membros"),{
     nome:nome.value,
     classe:classe.value,
-    resets:Number(resets.value),
-    status:"pendente",
-    cargo:"MEMBRO"
+    resets:Number(resets.value)
   });
 };
-
-/* LISTA */
-onSnapshot(collection(db,"membros"),snap=>{
-  ranking.innerHTML="";
-  pendentes.innerHTML="";
-  let lista=[];
-
-  snap.forEach(d=>{
-    let data=d.data();
-    let id=d.id;
-
-    if(data.status==="pendente"){
-      pendentes.innerHTML+=`
-      <li>${data.nome}
-      <button onclick="aprovar('${id}')">OK</button>
-      <button onclick="upar('${id}')">UP</button></li>`;
-    }
-
-    lista.push(data);
-  });
-
-  lista.sort((a,b)=>b.resets-a.resets);
-  lista.forEach((p,i)=>{
-    ranking.innerHTML+=`<li>#${i+1} ${p.nome} (${p.resets})</li>`;
-  });
-});
-
-/* ADMIN */
-window.aprovar = async(id)=>{
-  await updateDoc(doc(db,"membros",id),{status:"aprovado"});
-};
-
-window.upar = async(id)=>{
-  await updateDoc(doc(db,"membros",id),{cargo:"MOD"});
-};
-
-/* PARTICULAS */
-setInterval(()=>{
-  let p=document.createElement("div");
-  p.className="particle";
-  p.style.left=Math.random()*100+"vw";
-  p.style.animationDuration=(2+Math.random()*4)+"s";
-  document.body.appendChild(p);
-  setTimeout(()=>p.remove(),6000);
-},100);
 </script>
 
 </body>
-</html>
+    </html>
