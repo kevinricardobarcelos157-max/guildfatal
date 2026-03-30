@@ -4,13 +4,14 @@
 <meta charset="UTF-8">
 <title>🔥 Guild Fatal GOD 🔥</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
+
 <style>
 body{
   margin:0;
   font-family:Arial;
   color:white;
   text-align:center;
-  overflow:auto;
   background:black;
 }
 
@@ -22,35 +23,50 @@ body{
   width:100vw;
   height:100vh;
   object-fit:cover;
+  transform:scale(1.2); /* 🔥 DIMINUI ZOOM */
   z-index:-1;
   filter:brightness(0.4);
 }
 
 /* TITULO */
 #tituloCentral{
-  position:fixed;
-  top:20%;
+  position:absolute;
+  top:12%;
   left:50%;
-  transform:translate(-50%, -50%);
+  transform:translateX(-50%);
 }
 
 #tituloCentral h1{
-  font-size:50px;
+  margin:0;
+  padding:0;
+  font-size:38px;
+  font-family:'Cinzel', serif;
+  letter-spacing:2px;
   color:gold;
+  text-transform:uppercase;
+
+  text-shadow:
+    0 0 5px #ff0000,
+    0 0 10px #ff0000,
+    0 0 20px gold,
+    0 0 40px gold;
+
   animation: glow 2s infinite alternate;
 }
 
 @keyframes glow{
-  from{ text-shadow:0 0 10px red;}
-  to{ text-shadow:0 0 30px gold;}
+  from{ filter:brightness(1);}
+  to{ filter:brightness(1.5);}
 }
 
-/* CONTAINER */
+/* CENTRALIZAR CONTAINER */
 #container{
-  margin-top:250px;
+  position:absolute;
+  top:55%;
+  left:50%;
+  transform:translate(-50%, -50%);
   width:90%;
-  max-width:400px;
-  margin:auto;
+  max-width:350px;
 }
 
 /* BOX */
@@ -75,57 +91,12 @@ body{
   text-align:left;
   font-size:14px;
 }
-
-/* PAINEL ADMIN */
-#adminPanel{
-  position:fixed;
-  bottom:10px;
-  right:10px;
-  width:260px;
-  background:black;
-  border:1px solid red;
-  padding:10px;
-  display:none;
-}
-
-/* CHAT */
-#chatBox{
-  position:fixed;
-  bottom:10px;
-  left:10px;
-  width:250px;
-  background:black;
-  border:1px solid red;
-  padding:10px;
-  display:none;
-}
-
-#chatMsgs{
-  height:150px;
-  overflow:auto;
-  font-size:12px;
-  text-align:left;
-  margin-bottom:5px;
-}
-
-/* WAR PANEL */
-#warPanel{
-  position:fixed;
-  top:10px;
-  left:10px;
-  width:200px;
-  background:black;
-  border:1px solid gold;
-  padding:10px;
-  display:none;
-  font-size:12px;
-}
 </style>
 </head>
 
 <body>
 
-<video id="bgVideo" autoplay loop muted>
+<video id="bgVideo" autoplay loop>
   <source src="bg_compressed.mp4" type="video/mp4">
 </video>
 
@@ -133,162 +104,40 @@ body{
   <h1>🔥 GUILD FATAL 🔥</h1>
 </div>
 
-<div id="userInfo"></div>
-
 <div id="container">
 
   <div class="box">
     <h3>Conta</h3>
-    <input id="email" placeholder="Email"><br><br>
-    <input id="senhaConta" type="password" placeholder="Senha"><br><br>
-    <button class="btnMU" onclick="registrar()">Cadastrar</button>
-    <button class="btnMU" onclick="entrarConta()">Entrar</button>
+    <input placeholder="Email"><br><br>
+    <input type="password" placeholder="Senha"><br><br>
+    <button class="btnMU">Cadastrar</button>
+    <button class="btnMU">Entrar</button>
   </div>
 
   <div class="box">
-    <input id="nome" placeholder="Nick"><br><br>
-    <input id="classe" placeholder="Classe"><br><br>
-    <input id="resets" placeholder="Resets"><br><br>
-    <button class="btnMU" onclick="enviar()">Cadastrar personagem</button>
+    <input placeholder="Nick"><br><br>
+    <input placeholder="Classe"><br><br>
+    <input placeholder="Resets"><br><br>
+    <button class="btnMU">Cadastrar personagem</button>
   </div>
 
   <div class="box">
     <h3>🏆 Ranking</h3>
-    <div id="ranking" class="lista"></div>
   </div>
 
   <div class="box">
     <h3>📜 Membros</h3>
-    <div id="lista" class="lista"></div>
   </div>
 
 </div>
 
-<!-- ADMIN -->
-<div id="adminPanel">
-  <h4>👑 Admin</h4>
-  <div id="listaBans"></div>
-</div>
-
-<!-- CHAT -->
-<div id="chatBox">
-  <div id="chatMsgs"></div>
-  <input id="chatInput" placeholder="Mensagem">
-  <button onclick="enviarMsg()">Enviar</button>
-</div>
-
-<!-- WAR -->
-<div id="warPanel">
-  ⚔️ Guerra Guild<br>
-  <div id="warStatus"></div>
-</div>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-const app=initializeApp({
-  apiKey:"AIza...",
-  authDomain:"fatal-guild.firebaseapp.com",
-  projectId:"fatal-guild"
+<script>
+// 🔊 ATIVAR SOM NO CLIQUE
+document.body.addEventListener("click", ()=>{
+  const video = document.getElementById("bgVideo");
+  video.muted = false;
+  video.play();
 });
-
-const db=getFirestore(app);
-const auth=getAuth(app);
-
-let isAdmin=false;
-let isBanned=false;
-
-/* USER */
-const userInfo=document.getElementById("userInfo");
-const adminPanel=document.getElementById("adminPanel");
-const chatBox=document.getElementById("chatBox");
-const warPanel=document.getElementById("warPanel");
-
-onAuthStateChanged(auth, async (user)=>{
-  if(user){
-
-    // BAN
-    const bans=await getDocs(collection(db,"bans"));
-    bans.forEach(b=>{
-      if(b.data().uid===user.uid){
-        alert("Banido");
-        signOut(auth);
-      }
-    });
-
-    // ADMIN
-    const snap=await getDocs(collection(db,"admins"));
-    if(snap.empty){
-      await addDoc(collection(db,"admins"),{uid:user.uid});
-      isAdmin=true;
-    }else{
-      snap.forEach(d=>{
-        if(d.data().uid===user.uid) isAdmin=true;
-      });
-    }
-
-    userInfo.innerHTML=`👤 ${user.email} ${isAdmin?"👑":""}`;
-
-    chatBox.style.display="block";
-    warPanel.style.display="block";
-
-    if(isAdmin){
-      adminPanel.style.display="block";
-      carregarBans();
-    }
-
-  }else{
-    chatBox.style.display="none";
-    warPanel.style.display="none";
-    adminPanel.style.display="none";
-  }
-});
-
-/* CHAT */
-window.enviarMsg = async ()=>{
-  if(!auth.currentUser) return;
-
-  await addDoc(collection(db,"chat"),{
-    user: auth.currentUser.email,
-    msg: chatInput.value,
-    data: new Date()
-  });
-
-  chatInput.value="";
-};
-
-onSnapshot(query(collection(db,"chat"),orderBy("data")),snap=>{
-  chatMsgs.innerHTML="";
-  snap.forEach(d=>{
-    const x=d.data();
-    chatMsgs.innerHTML+=`${x.user}: ${x.msg}<br>`;
-  });
-});
-
-/* WAR SYSTEM */
-onSnapshot(collection(db,"war"),snap=>{
-  warStatus.innerHTML="";
-  snap.forEach(d=>{
-    const w=d.data();
-    warStatus.innerHTML+=`${w.guild1} vs ${w.guild2}<br>`;
-  });
-});
-
-/* DESBAN */
-window.desbanir = async (id)=>{
-  await deleteDoc(doc(db,"bans",id));
-};
-
-function carregarBans(){
-  onSnapshot(collection(db,"bans"),snap=>{
-    listaBans.innerHTML="";
-    snap.forEach(d=>{
-      listaBans.innerHTML+=`${d.data().uid} <button onclick="desbanir('${d.id}')">🔓</button><br>`;
-    });
-  });
-}
 </script>
 
 </body>
