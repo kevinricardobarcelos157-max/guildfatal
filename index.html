@@ -11,19 +11,49 @@ body {
   color:#fff;
   font-family: Arial;
   text-align:center;
+  overflow:hidden;
 }
 
-/* VIDEO */
+/* 🎥 VIDEO */
 #bgVideo{
   position:fixed;
   width:100%;
   height:100%;
   object-fit:cover;
-  z-index:-1;
+  z-index:-2;
   filter:brightness(0.3);
 }
 
-/* PAINEL */
+/* 🌑 OVERLAY ESCURO */
+.overlay{
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.4);
+  z-index:-1;
+}
+
+/* 🔥 TEXTO NO MEIO */
+#centerText{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;
+}
+
+#centerText h1{
+  font-size:40px;
+  color:gold;
+  text-shadow:0 0 20px red,0 0 40px gold;
+}
+
+#centerText p{
+  margin-top:10px;
+  font-size:18px;
+}
+
+/* 📦 BOXES */
 .box{
   background:rgba(0,0,0,0.8);
   border:1px solid red;
@@ -31,7 +61,7 @@ body {
   padding:10px;
 }
 
-/* ADMIN ESCONDIDO */
+/* 🔒 ADMIN ESCONDIDO */
 #admin{
   display:none;
 }
@@ -40,16 +70,25 @@ body {
 
 <body>
 
+<!-- VIDEO -->
 <video autoplay muted loop id="bgVideo">
-  <source src="video.mp4">
+  <source src="bg_compressed.mp4" type="video/mp4">
 </video>
 
+<div class="overlay"></div>
+
+<!-- TEXTO CENTRAL -->
+<div id="centerText">
+  <h1>🔥 GUILD FATAL 🔥</h1>
+  <p>Domine o ranking. Prove seu poder.</p>
+</div>
+
+<!-- 🎵 MUSICA -->
 <audio id="musica" loop>
-  <source src="musica.mp3">
+  <source src="musica.mp3" type="audio/mp3">
 </audio>
 
-<h1>🔥 GUILD FATAL 🔥</h1>
-
+<!-- CADASTRO -->
 <div class="box">
 <input id="nome" placeholder="Nick">
 <input id="classe" placeholder="Classe">
@@ -57,9 +96,11 @@ body {
 <button onclick="enviar()">Entrar</button>
 </div>
 
+<!-- LISTAS -->
 <div class="box"><ul id="ranking"></ul></div>
 <div class="box"><ul id="listaPublica"></ul></div>
 
+<!-- LOGIN ADMIN -->
 <div class="box">
 <input id="senha" type="password" placeholder="Senha admin">
 <button onclick="login()">Admin</button>
@@ -80,7 +121,7 @@ const app=initializeApp({
 });
 const db=getFirestore(app);
 
-/* LOGIN ADMIN (CORRIGIDO) */
+/* LOGIN */
 window.login = () => {
   const senhaInput = document.getElementById("senha");
   const adminPanel = document.getElementById("admin");
@@ -102,7 +143,7 @@ window.enviar = async () => {
   });
 };
 
-/* LISTAGEM */
+/* LISTA */
 onSnapshot(collection(db,"membros"),snap=>{
   listaPublica.innerHTML="";
   ranking.innerHTML="";
@@ -137,7 +178,7 @@ window.aprovar = async (id) => {
   await updateDoc(doc(db,"membros",id),{status:"aprovado"});
 };
 
-/* MUSICA */
+/* 🎵 MUSICA AUTO */
 const musica = document.getElementById("musica");
 document.addEventListener("click",()=>{
   musica.play();
