@@ -17,7 +17,6 @@ body{
   color:white;
 }
 
-/* VIDEO FUNDO */
 #bgVideo{
   position:fixed;
   top:0;
@@ -26,10 +25,9 @@ body{
   height:100%;
   object-fit:cover;
   z-index:-1;
-  filter:brightness(0.7);
+  filter:brightness(0.6);
 }
 
-/* CENTRAL */
 .container{
   position:absolute;
   top:50%;
@@ -38,22 +36,20 @@ body{
   text-align:center;
 }
 
-/* TITULO */
 h1{
   font-size:48px;
+  margin-bottom:20px;
   color:#00bfff;
   text-shadow:0 0 20px #00bfff;
 }
 
-/* BOX */
 .box{
   background:rgba(0,0,0,0.7);
-  padding:25px;
+  padding:20px;
   border-radius:15px;
   box-shadow:0 0 20px #00bfff;
 }
 
-/* INPUT */
 input{
   display:block;
   margin:10px auto;
@@ -63,7 +59,6 @@ input{
   border-radius:5px;
 }
 
-/* BOTÃO */
 button{
   margin:10px;
   padding:10px 20px;
@@ -84,8 +79,7 @@ button:hover{
 
 <body>
 
-<!-- VIDEO -->
-<video id="bgVideo" autoplay loop playsinline controls>
+<video id="bgVideo" autoplay loop playsinline muted>
   <source src="bg_compressed.mp4" type="video/mp4">
 </video>
 
@@ -94,54 +88,55 @@ button:hover{
 <h1>🔥 GUILD FATAL 🔥</h1>
 
 <div class="box">
-  <h3>Login / Cadastro</h3>
+  <h3>Login</h3>
 
-  <input id="email" placeholder="Email">
-  <input id="senha" type="password" placeholder="Senha">
+  <input id="loginUser" placeholder="Usuário (email)">
+  <input id="loginPass" type="password" placeholder="Senha">
 
-  <button onclick="login()">Entrar</button>
+  <button onclick="entrar()">Entrar</button>
   <button onclick="criarConta()">Criar Conta</button>
 </div>
 
 </div>
 
-<!-- FIREBASE CORRETO -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
-from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+<!-- FIREBASE (VERSÃO COMPATÍVEL) -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
 
+<script>
 const firebaseConfig = {
   apiKey: "AIzaSyBUPcIonbLaTWv6SnhbZghlU51Tx6MT0z8",
   authDomain: "fatal-guild.firebaseapp.com",
   projectId: "fatal-guild",
   storageBucket: "fatal-guild.firebasestorage.app",
   messagingSenderId: "67435581794",
-  appId: "1:67435581794:web:d13913ab32cb04a5bddc3b",
-  measurementId: "G-X05T2S8MV0"
+  appId: "1:67435581794:web:d13913ab32cb04a5bddc3b"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
 
 // CRIAR CONTA
-window.criarConta = function(){
-  const email = document.getElementById("email").value;
-  const senha = document.getElementById("senha").value;
+function criarConta(){
+  const email = document.getElementById("loginUser").value;
+  const senha = document.getElementById("loginPass").value;
 
-  createUserWithEmailAndPassword(auth, email, senha)
+  auth.createUserWithEmailAndPassword(email, senha)
   .then(() => alert("Conta criada com sucesso!"))
-  .catch(err => alert(err.message));
+  .catch(e => alert(e.message));
 }
 
 // LOGIN
-window.login = function(){
-  const email = document.getElementById("email").value;
-  const senha = document.getElementById("senha").value;
+function entrar(){
+  const email = document.getElementById("loginUser").value;
+  const senha = document.getElementById("loginPass").value;
 
-  signInWithEmailAndPassword(auth, email, senha)
-  .then(() => alert("Login realizado!"))
-  .catch(err => alert(err.message));
+  auth.signInWithEmailAndPassword(email, senha)
+  .then(() => {
+    alert("Login efetuado com sucesso!");
+    window.location.href = "painel.html";
+  })
+  .catch(e => alert(e.message));
 }
 </script>
 
