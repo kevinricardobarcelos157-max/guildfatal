@@ -50,12 +50,12 @@ canvas{position:fixed;top:0;left:0;pointer-events:none;}
   font-family:'Cinzel', serif;
   color:#ff2a00;
   letter-spacing:4px;
-  position:relative;
   display:inline-block;
   text-shadow:0 0 40px red, 4px 4px 0 black;
   animation:tremor 0.15s infinite;
 }
 
+/* efeitos nome */
 #tituloCentral h1::before{
   content:attr(data-text);
   position:absolute;
@@ -82,6 +82,29 @@ canvas{position:fixed;top:0;left:0;pointer-events:none;}
 @keyframes tremor{
   25%{transform:translate(1px,-1px);}
   50%{transform:translate(-1px,1px);}
+}
+
+/* 🔒 LOGO FIXO COM EFEITO */
+#logoMain{
+  position:absolute;
+  top:17%;
+  left:50%;
+  transform:translateX(-50%);
+}
+
+#logoMain img{
+  width:220px;
+  animation:logoPulse 2.5s ease-in-out infinite;
+  filter:
+    drop-shadow(0 0 10px red)
+    drop-shadow(0 0 20px red)
+    drop-shadow(0 0 30px darkred);
+}
+
+@keyframes logoPulse{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.05);}
+  100%{transform:scale(1);}
 }
 
 /* CONTAINER */
@@ -117,6 +140,7 @@ input,select{
   color:white;
   margin-top:5px;
   width:100%;
+  cursor:pointer;
 }
 
 #chatBox{
@@ -144,43 +168,40 @@ input,select{
   <h1 data-text="👑☠️ GUILD FATAL ☠️👑">👑☠️ GUILD FATAL ☠️👑</h1>
 </div>
 
+<div id="logoMain">
+  <img src="logo1.jpg">
+</div>
+
 <div id="container">
 
-<!-- LOGIN -->
 <div class="box">
 <h3>Conta</h3>
 <input id="email" placeholder="Email"><br><br>
 <input id="senha" type="password" placeholder="Senha"><br><br>
-
 <button class="btnMU" id="btnRegister">Cadastrar</button>
 <button class="btnMU" id="btnLogin">Entrar</button>
 <button class="btnMU" id="btnLogout">Sair</button>
 </div>
 
-<!-- PERSONAGEM -->
 <div class="box">
 <input id="nick" placeholder="Nick"><br><br>
 <input id="classe" placeholder="Classe"><br><br>
 <input id="resets" placeholder="Resets"><br><br>
 <input id="level" placeholder="Level"><br><br>
-
 <select id="cargo">
 <option>Membro</option>
 <option>Moderador</option>
 <option>Líder</option>
 </select><br><br>
-
 <button class="btnMU" id="btnChar">Criar Personagem</button>
 </div>
 
-<!-- GUILD -->
 <div class="box">
 <input id="guildNome" placeholder="Nome da Guild"><br><br>
 <button class="btnMU" id="btnCriarGuild">Criar Guild</button>
 <button class="btnMU" id="btnEntrarGuild">Entrar Guild</button>
 </div>
 
-<!-- CHAT -->
 <div class="box">
 <h3>Chat</h3>
 <div id="chatBox"></div>
@@ -212,49 +233,80 @@ alert("Conta criada!");
 
 btnLogout.onclick=()=>localStorage.removeItem("token");
 
+/* PERSONAGEM */
+btnChar.onclick=async()=>{
+let token=localStorage.getItem("token");
+await fetch(API+"/personagem",{method:"POST",
+headers:{"Content-Type":"application/json","Authorization":token},
+body:JSON.stringify({
+nick:nick.value,
+classe:classe.value,
+resets:+resets.value,
+level:+level.value,
+cargo:cargo.value
+})});
+};
+
+/* GUILD */
+btnCriarGuild.onclick=async()=>{
+let token=localStorage.getItem("token");
+await fetch(API+"/guild/criar",{method:"POST",
+headers:{"Content-Type":"application/json","Authorization":token},
+body:JSON.stringify({nome:guildNome.value})});
+};
+
+btnEntrarGuild.onclick=async()=>{
+let token=localStorage.getItem("token");
+await fetch(API+"/guild/entrar",{method:"POST",
+headers:{"Content-Type":"application/json","Authorization":token},
+body:JSON.stringify({nome:guildNome.value})});
+};
+
 /* CHAT */
 btnMsg.onclick=async()=>{
 let token=localStorage.getItem("token");
 await fetch(API+"/guild/chat",{method:"POST",
 headers:{"Content-Type":"application/json","Authorization":token},
 body:JSON.stringify({msg:msg.value})});
+msg.value="";
 };
+
+async function atualizarChat(){
+let token=localStorage.getItem("token");
+if(!token) return;
+let r=await fetch(API+"/guild/chat",{headers:{"Authorization":token}});
+let lista=await r.json();
+chatBox.innerHTML=lista.map(m=>`<p>${m}</p>`).join("");
+}
+
+/* RANKING */
+async function atualizar(){
+let r=await fetch(API+"/ranking");
+let lista=await r.json();
+
+let rk="<h3>🏆 Ranking</h3>";
+let mb="<h3>📜 Membros</h3>";
+
+lista.forEach(p=>{
+rk+=`<p>${p.nick} - ${p.resets}</p>`;
+mb+=`<p>${p.nick} | Lv ${p.level}</p>`;
+});
+
+rankingBox.innerHTML=rk;
+membrosBox.innerHTML=mb;
+}
+
+setInterval(()=>{atualizar(); atualizarChat();},4000);
+atualizar();
 
 /* SOM */
-window.onload=()=>{
-bossSound.play().catch(()=>{});
-};
+window.onload=()=>{bossSound.play().catch(()=>{});};
 
-setInterval(()=>{
-shineSound.play().catch(()=>{});
-},3000);
+setInterval(()=>{shineSound.play().catch(()=>{});},3000);
 
-/* VIDEO SOM */
+/* VIDEO */
 document.body.onclick=()=>{bgVideo.muted=false;bgVideo.play();};
-
-/* PARTÍCULAS */
-let c=document.getElementById("particles");
-let ctx=c.getContext("2d");
-c.width=innerWidth;c.height=innerHeight;
-
-let p=[];
-function loop(){
-ctx.clearRect(0,0,c.width,c.height);
-if(Math.random()<0.5){
-let t=title.getBoundingClientRect();
-p.push({x:t.left+Math.random()*t.width,y:t.top,v:Math.random()*2});
-}
-p.forEach((a,i)=>{
-a.y-=a.v;
-ctx.fillStyle="red";
-ctx.fillRect(a.x,a.y,2,2);
-if(a.y<0)p.splice(i,1);
-});
-requestAnimationFrame(loop);
-}
-let title=document.querySelector("#tituloCentral");
-loop();
 </script>
 
 </body>
-</html>
+  </html>
