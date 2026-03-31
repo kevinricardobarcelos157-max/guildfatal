@@ -2,315 +2,201 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>🔥 Guild Fatal GOD 🔥</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐯 Plataforma Tigrinho</title>
 
 <style>
 body{
   margin:0;
   font-family:Arial;
+  background:linear-gradient(135deg,#0a0a0a,#1c1c1c);
   color:white;
   text-align:center;
-  background:black;
-  overflow:hidden;
-}
-
-/* VIDEO */
-#bgVideo{
-  position:fixed;
-  top:50%;
-  left:50%;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  transform:translate(-50%, -50%) scale(0.75);
-  z-index:-6;
-  filter:brightness(0.4);
-}
-
-/* CANVAS */
-canvas{position:fixed;top:0;left:0;pointer-events:none;}
-#lightning{z-index:-5;}
-#lava{z-index:-4;}
-#magic{z-index:-3;}
-
-/* TITULO */
-#tituloCentral{
-  position:absolute;
-  top:10%;
-  left:50%;
-  transform:translateX(-50%);
-}
-#tituloCentral h1{
-  font-size:44px;
-  font-family:'Cinzel', serif;
-  color:#8b0000;
-  text-shadow:0 0 25px red;
-}
-
-/* LOGO */
-#logoMain{
-  position:absolute;
-  top:22%;
-  left:50%;
-  transform:translateX(-50%);
-}
-#logoMain img{
-  width:220px;
-  filter:drop-shadow(0 0 25px red);
 }
 
 /* CONTAINER */
-#container{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
+.screen{
+  display:none;
+  height:100vh;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
 }
 
-/* BOX */
-.box{
-  background:rgba(20,0,0,0.95);
-  padding:20px;
-  border:1px solid red;
-  width:300px;
-  box-shadow:0 0 30px red;
-  margin-bottom:10px;
-}
+.active{ display:flex; }
 
-input,select{
-  width:90%;
-  padding:8px;
+/* CARD */
+.card{
   background:#111;
-  border:1px solid red;
-  color:white;
+  padding:30px;
+  border-radius:15px;
+  box-shadow:0 0 20px rgba(255,140,0,0.5);
+  width:300px;
 }
 
-.btnMU{
-  padding:10px;
-  background:linear-gradient(45deg,#3a0000,#a00000);
-  border:none;
-  color:white;
-  margin-top:5px;
+/* INPUT */
+input{
   width:100%;
+  padding:10px;
+  margin:10px 0;
+  border:none;
+  border-radius:8px;
+}
+
+/* BUTTON */
+button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background:orange;
+  color:black;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  background:#ffb84d;
+}
+
+/* LINKS */
+.link{
+  margin-top:10px;
+  font-size:14px;
+  cursor:pointer;
+  color:orange;
+}
+
+/* DASHBOARD */
+#dashboard{
+  padding:20px;
+}
+
+.games{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:15px;
+  margin-top:20px;
+}
+
+.game{
+  background:#222;
+  padding:20px;
+  border-radius:10px;
+  transition:0.3s;
   cursor:pointer;
 }
 
-#chatBox{
-  height:100px;
-  overflow:auto;
+.game:hover{
+  background:orange;
+  color:black;
+  transform:scale(1.05);
+}
+
+/* HEADER */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.logout{
+  background:red;
+  color:white;
 }
 </style>
 </head>
 
 <body>
 
-<video id="bgVideo" autoplay muted loop>
-  <source src="bg_compressed.mp4" type="video/mp4">
-</video>
-
-<canvas id="lightning"></canvas>
-<canvas id="lava"></canvas>
-<canvas id="magic"></canvas>
-
-<div id="tituloCentral">
-  <h1>🔥 GUILD FATAL 🔥</h1>
-</div>
-
-<div id="logoMain">
-  <img src="logo1.jpg">
-</div>
-
-<div id="container">
-
 <!-- LOGIN -->
-<div class="box">
-<h3>Conta</h3>
-<input id="email" placeholder="Email"><br><br>
-<input id="senha" type="password" placeholder="Senha"><br><br>
-
-<button class="btnMU" id="btnRegister">Cadastrar</button>
-<button class="btnMU" id="btnLogin">Entrar</button>
-<button class="btnMU" id="btnLogout">Sair</button>
+<div id="login" class="screen active">
+  <div class="card">
+    <h2>🐯 Login</h2>
+    <input type="text" id="loginUser" placeholder="Usuário">
+    <input type="password" id="loginPass" placeholder="Senha">
+    <button onclick="login()">Entrar</button>
+    <div class="link" onclick="show('register')">Criar conta</div>
+    <div class="link" onclick="show('recover')">Esqueci a senha</div>
+  </div>
 </div>
 
-<!-- PERSONAGEM -->
-<div class="box">
-<input id="nick" placeholder="Nick"><br><br>
-<input id="classe" placeholder="Classe"><br><br>
-<input id="resets" placeholder="Resets"><br><br>
-<input id="level" placeholder="Level"><br><br>
-
-<select id="cargo">
-<option>Membro</option>
-<option>Moderador</option>
-<option>Líder</option>
-</select><br><br>
-
-<button class="btnMU" id="btnChar">Criar Personagem</button>
+<!-- REGISTRO -->
+<div id="register" class="screen">
+  <div class="card">
+    <h2>📥 Cadastro</h2>
+    <input type="text" id="regUser" placeholder="Usuário">
+    <input type="password" id="regPass" placeholder="Senha">
+    <button onclick="register()">Cadastrar</button>
+    <div class="link" onclick="show('login')">Voltar</div>
+  </div>
 </div>
 
-<!-- GUILD -->
-<div class="box">
-<input id="guildNome" placeholder="Nome da Guild"><br><br>
-<button class="btnMU" id="btnCriarGuild">Criar Guild</button>
-<button class="btnMU" id="btnEntrarGuild">Entrar Guild</button>
-
-<div id="guildInfo"></div>
+<!-- RECUPERAÇÃO -->
+<div id="recover" class="screen">
+  <div class="card">
+    <h2>🔐 Recuperar senha</h2>
+    <input type="text" placeholder="Digite seu usuário">
+    <button onclick="alert('Senha enviada (simulação)')">Recuperar</button>
+    <div class="link" onclick="show('login')">Voltar</div>
+  </div>
 </div>
 
-<!-- CHAT -->
-<div class="box">
-<h3>Chat</h3>
-<div id="chatBox"></div>
-<input id="msg" placeholder="Mensagem"><br>
-<button class="btnMU" id="btnMsg">Enviar</button>
-</div>
+<!-- DASHBOARD -->
+<div id="dashboard" class="screen">
+  <div class="header">
+    <h2>🎰 Jogos</h2>
+    <button class="logout" onclick="logout()">Sair</button>
+  </div>
 
-<div class="box" id="rankingBox"></div>
-<div class="box" id="membrosBox"></div>
-
+  <div class="games">
+    <div class="game">🐯 Fortune Tiger</div>
+    <div class="game">🐰 Fortune Rabbit</div>
+    <div class="game">🐉 Dragon Fortune</div>
+    <div class="game">🎲 Slots</div>
+    <div class="game">🎯 Crash</div>
+    <div class="game">🎰 Roleta</div>
+  </div>
 </div>
 
 <script>
-const API="https://fatalguild-api.onrender.com";
-
-/* LOGIN */
-btnLogin.onclick=async()=>{
-let r=await fetch(API+"/login",{method:"POST",headers:{"Content-Type":"application/json"},
-body:JSON.stringify({email:email.value,senha:senha.value})});
-let d=await r.json();
-
-if(d.ok){
-localStorage.setItem("token",d.token);
-alert("Logado!");
-}
-};
-
-btnRegister.onclick=async()=>{
-await fetch(API+"/register",{method:"POST",headers:{"Content-Type":"application/json"},
-body:JSON.stringify({email:email.value,senha:senha.value})});
-alert("Conta criada!");
-};
-
-btnLogout.onclick=()=>{localStorage.removeItem("token");};
-
-/* PERSONAGEM */
-btnChar.onclick=async()=>{
-let token=localStorage.getItem("token");
-
-await fetch(API+"/personagem",{method:"POST",
-headers:{"Content-Type":"application/json","Authorization":token},
-body:JSON.stringify({
-nick:nick.value,
-classe:classe.value,
-resets:+resets.value,
-level:+level.value,
-cargo:cargo.value
-})});
-};
-
-/* GUILD */
-btnCriarGuild.onclick=async()=>{
-let token=localStorage.getItem("token");
-await fetch(API+"/guild/criar",{method:"POST",
-headers:{"Content-Type":"application/json","Authorization":token},
-body:JSON.stringify({nome:guildNome.value})});
-};
-
-btnEntrarGuild.onclick=async()=>{
-let token=localStorage.getItem("token");
-await fetch(API+"/guild/entrar",{method:"POST",
-headers:{"Content-Type":"application/json","Authorization":token},
-body:JSON.stringify({nome:guildNome.value})});
-};
-
-/* CHAT */
-btnMsg.onclick=async()=>{
-let token=localStorage.getItem("token");
-await fetch(API+"/guild/chat",{method:"POST",
-headers:{"Content-Type":"application/json","Authorization":token},
-body:JSON.stringify({msg:msg.value})});
-msg.value="";
-};
-
-async function atualizarChat(){
-let token=localStorage.getItem("token");
-if(!token) return;
-
-let r=await fetch(API+"/guild/chat",{headers:{"Authorization":token}});
-let lista=await r.json();
-
-chatBox.innerHTML=lista.map(m=>`<p>${m}</p>`).join("");
+function show(screen){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screen).classList.add('active');
 }
 
-/* RANKING */
-async function atualizar(){
-let r=await fetch(API+"/ranking");
-let lista=await r.json();
+// Simulação de banco
+let users = JSON.parse(localStorage.getItem("users")) || {};
 
-let rk="<h3>🏆 Ranking</h3>";
-let mb="<h3>📜 Membros</h3>";
+function register(){
+  let user = document.getElementById("regUser").value;
+  let pass = document.getElementById("regPass").value;
 
-lista.forEach(p=>{
-rk+=`<p>${p.nick} - ${p.resets}</p>`;
-mb+=`<p>${p.nick} | Lv ${p.level}</p>`;
-});
+  if(!user || !pass) return alert("Preencha tudo!");
 
-rankingBox.innerHTML=rk;
-membrosBox.innerHTML=mb;
+  users[user] = pass;
+  localStorage.setItem("users", JSON.stringify(users));
+
+  alert("Conta criada!");
+  show('login');
 }
 
-setInterval(()=>{atualizar(); atualizarChat();},4000);
-atualizar();
+function login(){
+  let user = document.getElementById("loginUser").value;
+  let pass = document.getElementById("loginPass").value;
 
-/* SOM */
-document.body.onclick=()=>{bgVideo.muted=false;bgVideo.play();};
+  if(users[user] === pass){
+    show('dashboard');
+  } else {
+    alert("Login inválido");
+  }
+}
 
-/* EFEITOS */
-let l=lightning.getContext("2d");
-lightning.width=innerWidth;lightning.height=innerHeight;
-function lightningFx(){
-l.clearRect(0,0,innerWidth,innerHeight);
-if(Math.random()<0.02){
-l.strokeStyle="white";
-l.beginPath();
-l.moveTo(Math.random()*innerWidth,0);
-l.lineTo(Math.random()*innerWidth,innerHeight);
-l.stroke();
+function logout(){
+  show('login');
 }
-requestAnimationFrame(lightningFx);
-}
-lightningFx();
-
-let ctx=lava.getContext("2d");
-lava.width=innerWidth;lava.height=innerHeight;
-let t=0;
-function lavaFx(){
-ctx.clearRect(0,0,lava.width,lava.height);
-ctx.beginPath();
-ctx.moveTo(0,lava.height);
-for(let x=0;x<=lava.width;x+=10){
-ctx.lineTo(x,lava.height-100+Math.sin(x*0.01+t)*10);
-}
-ctx.lineTo(lava.width,lava.height);
-ctx.fillStyle="red";
-ctx.fill();
-t+=0.05;
-requestAnimationFrame(lavaFx);
-}
-lavaFx();
-
-let m=magic.getContext("2d");
-magic.width=innerWidth;magic.height=innerHeight;
-function magicFx(){
-m.fillStyle="purple";
-m.fillRect(Math.random()*innerWidth,Math.random()*innerHeight,2,2);
-requestAnimationFrame(magicFx);
-}
-magicFx();
 </script>
 
 </body>
-</html>
+                                                                    </html>
