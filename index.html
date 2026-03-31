@@ -14,17 +14,6 @@ body{
   text-align:center;
   background:black;
   overflow-x:hidden;
-  animation:entrada 0.8s ease;
-}
-
-/* 💥 TREMOR AO ENTRAR */
-@keyframes entrada{
-  0%{transform:scale(1.1) translate(0);}
-  20%{transform:translate(-10px,5px);}
-  40%{transform:translate(10px,-5px);}
-  60%{transform:translate(-5px,5px);}
-  80%{transform:translate(5px,-5px);}
-  100%{transform:scale(1) translate(0);}
 }
 
 /* VIDEO */
@@ -45,14 +34,12 @@ canvas{position:fixed;top:0;left:0;pointer-events:none;}
 #lightning{z-index:-5;}
 #lava{z-index:-4;}
 #magic{z-index:-3;}
-
-/* NOVO CANVAS PARTÍCULAS */
 #particles{z-index:-2;}
 
 /* TITULO */
 #tituloCentral{
   position:absolute;
-  top:4%;
+  top:3%;
   left:50%;
   transform:translateX(-50%);
   width:100%;
@@ -65,32 +52,19 @@ canvas{position:fixed;top:0;left:0;pointer-events:none;}
   letter-spacing:4px;
   position:relative;
   display:inline-block;
-
-  text-shadow:
-    0 0 10px red,
-    0 0 20px red,
-    0 0 40px red,
-    2px 2px 0 black,
-    4px 4px 0 #300,
-    6px 6px 20px rgba(0,0,0,0.9);
-
+  text-shadow:0 0 40px red, 4px 4px 0 black;
   animation:tremor 0.15s infinite;
 }
 
-/* FOGO */
 #tituloCentral h1::before{
   content:attr(data-text);
   position:absolute;
-  left:0;
-  top:0;
   color:orange;
-  z-index:-1;
   filter:blur(8px);
-  opacity:0.7;
+  z-index:-1;
   animation:fogo 1s infinite alternate;
 }
 
-/* BRILHO */
 #tituloCentral h1::after{
   content:'';
   position:absolute;
@@ -98,45 +72,22 @@ canvas{position:fixed;top:0;left:0;pointer-events:none;}
   left:-100%;
   width:60%;
   height:100%;
-  background:linear-gradient(120deg,transparent,rgba(255,255,255,0.9),transparent);
+  background:linear-gradient(120deg,transparent,white,transparent);
   transform:skewX(-25deg);
   animation:brilho 3s infinite;
 }
 
-@keyframes brilho{
-  0%{left:-100%;}
-  100%{left:200%;}
-}
-
-@keyframes fogo{
-  from{transform:translateY(0);}
-  to{transform:translateY(-5px);}
-}
-
+@keyframes brilho{100%{left:200%;}}
+@keyframes fogo{to{transform:translateY(-5px);}}
 @keyframes tremor{
-  0%{transform:translate(0);}
   25%{transform:translate(1px,-1px);}
   50%{transform:translate(-1px,1px);}
-  75%{transform:translate(1px,1px);}
-  100%{transform:translate(0);}
-}
-
-/* LOGO */
-#logoMain{
-  position:absolute;
-  top:17%;
-  left:50%;
-  transform:translateX(-50%);
-}
-#logoMain img{
-  width:220px;
-  filter:drop-shadow(0 0 25px red);
 }
 
 /* CONTAINER */
 #container{
   position:absolute;
-  top:58%;
+  top:55%;
   left:50%;
   transform:translate(-50%,-50%);
 }
@@ -166,7 +117,6 @@ input,select{
   color:white;
   margin-top:5px;
   width:100%;
-  cursor:pointer;
 }
 
 #chatBox{
@@ -178,8 +128,8 @@ input,select{
 
 <body>
 
-<!-- 🔊 SOM BOSS -->
 <audio id="bossSound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+<audio id="shineSound" src="https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3"></audio>
 
 <video id="bgVideo" autoplay muted loop>
   <source src="bg_compressed.mp4" type="video/mp4">
@@ -194,74 +144,117 @@ input,select{
   <h1 data-text="👑☠️ GUILD FATAL ☠️👑">👑☠️ GUILD FATAL ☠️👑</h1>
 </div>
 
-<div id="logoMain">
-  <img src="logo1.jpg">
-</div>
-
 <div id="container">
 
-<!-- (SEU SISTEMA COMPLETO CONTINUA IGUAL AQUI) -->
+<!-- LOGIN -->
+<div class="box">
+<h3>Conta</h3>
+<input id="email" placeholder="Email"><br><br>
+<input id="senha" type="password" placeholder="Senha"><br><br>
 
+<button class="btnMU" id="btnRegister">Cadastrar</button>
+<button class="btnMU" id="btnLogin">Entrar</button>
+<button class="btnMU" id="btnLogout">Sair</button>
 </div>
 
-<audio id="shineSound" src="https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3"></audio>
+<!-- PERSONAGEM -->
+<div class="box">
+<input id="nick" placeholder="Nick"><br><br>
+<input id="classe" placeholder="Classe"><br><br>
+<input id="resets" placeholder="Resets"><br><br>
+<input id="level" placeholder="Level"><br><br>
+
+<select id="cargo">
+<option>Membro</option>
+<option>Moderador</option>
+<option>Líder</option>
+</select><br><br>
+
+<button class="btnMU" id="btnChar">Criar Personagem</button>
+</div>
+
+<!-- GUILD -->
+<div class="box">
+<input id="guildNome" placeholder="Nome da Guild"><br><br>
+<button class="btnMU" id="btnCriarGuild">Criar Guild</button>
+<button class="btnMU" id="btnEntrarGuild">Entrar Guild</button>
+</div>
+
+<!-- CHAT -->
+<div class="box">
+<h3>Chat</h3>
+<div id="chatBox"></div>
+<input id="msg" placeholder="Mensagem"><br>
+<button class="btnMU" id="btnMsg">Enviar</button>
+</div>
+
+<div class="box" id="rankingBox"></div>
+<div class="box" id="membrosBox"></div>
+
+</div>
 
 <script>
 const API="https://fatalguild-api.onrender.com";
 
-/* 🔊 SOM AO ENTRAR */
-window.onload=()=>{
-document.getElementById("bossSound").play().catch(()=>{});
+/* LOGIN */
+btnLogin.onclick=async()=>{
+let r=await fetch(API+"/login",{method:"POST",headers:{"Content-Type":"application/json"},
+body:JSON.stringify({email:email.value,senha:senha.value})});
+let d=await r.json();
+if(d.ok){localStorage.setItem("token",d.token);alert("Logado!");}
 };
 
-/* SOM DO BRILHO */
+btnRegister.onclick=async()=>{
+await fetch(API+"/register",{method:"POST",headers:{"Content-Type":"application/json"},
+body:JSON.stringify({email:email.value,senha:senha.value})});
+alert("Conta criada!");
+};
+
+btnLogout.onclick=()=>localStorage.removeItem("token");
+
+/* CHAT */
+btnMsg.onclick=async()=>{
+let token=localStorage.getItem("token");
+await fetch(API+"/guild/chat",{method:"POST",
+headers:{"Content-Type":"application/json","Authorization":token},
+body:JSON.stringify({msg:msg.value})});
+};
+
+/* SOM */
+window.onload=()=>{
+bossSound.play().catch(()=>{});
+};
+
 setInterval(()=>{
-document.getElementById("shineSound").play().catch(()=>{});
+shineSound.play().catch(()=>{});
 },3000);
 
-/* ✨ PARTÍCULAS DO NOME */
-let pCanvas=document.getElementById("particles");
-let pCtx=pCanvas.getContext("2d");
-pCanvas.width=innerWidth;
-pCanvas.height=innerHeight;
+/* VIDEO SOM */
+document.body.onclick=()=>{bgVideo.muted=false;bgVideo.play();};
 
-let particles=[];
+/* PARTÍCULAS */
+let c=document.getElementById("particles");
+let ctx=c.getContext("2d");
+c.width=innerWidth;c.height=innerHeight;
 
-function spawnParticle(){
-let title=document.getElementById("tituloCentral").getBoundingClientRect();
-
-particles.push({
-x:title.left + Math.random()*title.width,
-y:title.top + title.height/2,
-vx:(Math.random()-0.5)*2,
-vy:-Math.random()*2,
-life:60
-});
+let p=[];
+function loop(){
+ctx.clearRect(0,0,c.width,c.height);
+if(Math.random()<0.5){
+let t=title.getBoundingClientRect();
+p.push({x:t.left+Math.random()*t.width,y:t.top,v:Math.random()*2});
 }
-
-function drawParticles(){
-pCtx.clearRect(0,0,pCanvas.width,pCanvas.height);
-
-particles.forEach((p,i)=>{
-p.x+=p.vx;
-p.y+=p.vy;
-p.life--;
-
-pCtx.fillStyle="red";
-pCtx.fillRect(p.x,p.y,2,2);
-
-if(p.life<=0) particles.splice(i,1);
+p.forEach((a,i)=>{
+a.y-=a.v;
+ctx.fillStyle="red";
+ctx.fillRect(a.x,a.y,2,2);
+if(a.y<0)p.splice(i,1);
 });
-
-if(Math.random()<0.5) spawnParticle();
-
-requestAnimationFrame(drawParticles);
+requestAnimationFrame(loop);
 }
-
-drawParticles();
-
-/* SEU JS ORIGINAL CONTINUA NORMAL AQUI */
+let title=document.querySelector("#tituloCentral");
+loop();
 </script>
 
 </body>
-  </html>
+</html>
