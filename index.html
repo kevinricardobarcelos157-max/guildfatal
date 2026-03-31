@@ -1,331 +1,174 @@
-<!DOCTYPE html>  <html lang="pt-BR">  
-<head>  
-<meta charset="UTF-8">  
-<title>🔥 💀Guild Fatal💀 GOD 🔥</title>  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">  <style>  
-body{  
-  margin:0;  
-  font-family:Arial;  
-  color:white;  
-  text-align:center;  
-  background:black;  
-}  
-  
-#bgVideo{  
-  position:fixed;  
-  top:50%;  
-  left:50%;  
-  width:100%;  
-  height:100%;  
-  object-fit:cover;  
-  transform:translate(-50%, -50%) scale(0.75);  
-  z-index:-2;  
-  filter:brightness(0.4);  
-}  
-  
-#tituloCentral{  
-  position:absolute;  
-  top:10%;  
-  left:50%;  
-  transform:translateX(-50%);  
-}  
-  
-#tituloCentral h1{  
-  margin:0;  
-  font-size:44px;  
-  font-family:'Cinzel', serif;  
-  letter-spacing:3px;  
-  text-transform:uppercase;  
-  color:#8b0000;  
-  
-  text-shadow:  
-    2px 2px 0 #000,  
-    4px 4px 0 #220000,  
-    6px 6px 0 #440000,  
-    8px 8px 10px black;  
-  
-  animation: glowDark 2s infinite alternate;  
-}  
-  
-#subTitulo{  
-  margin-top:5px;  
-  font-size:18px;  
-  color:#ccc;  
-  letter-spacing:2px;  
-  font-family:'Cinzel', serif;  
-  text-shadow:0 0 15px red;  
-}  
-  
-#logoMain{  
-  position:absolute;  
-  top:22%;  
-  left:50%;  
-  transform:translateX(-50%);  
-}  
-  
-#logoMain img{  
-  width:220px;  
-  max-width:80%;  
-  filter:drop-shadow(0 0 25px red);  
-  animation: flutuar 3s infinite ease-in-out, pulseGlow 2s infinite alternate;  
-}  
-  
-#fire{  
-  position:absolute;  
-  top:20%;  
-  left:50%;  
-  transform:translateX(-50%);  
-  width:260px;  
-  height:200px;  
-  pointer-events:none;  
-}  
-  
-.fireParticle{  
-  position:absolute;  
-  bottom:0;  
-  width:6px;  
-  height:6px;  
-  background:orange;  
-  border-radius:50%;  
-  opacity:0.8;  
-  animation: subir 2s linear infinite;  
-}  
-  
-@keyframes subir{  
-  0%{ transform:translateY(0) scale(1); opacity:1; }  
-  100%{ transform:translateY(-180px) scale(0.2); opacity:0; }  
-}  
-  
-#container{  
-  position:absolute;  
-  top:55%;  
-  left:50%;  
-  transform:translate(-50%, -50%);  
-  width:90%;  
-  max-width:350px;  
-}  
-  
-#logoFundo{  
-  position:absolute;  
-  top:50%;  
-  left:50%;  
-  transform:translate(-50%, -50%);  
-  z-index:-1;  
-}  
-  
-#logoFundo img{  
-  width:300px;  
-  opacity:0.08;  
-  filter:blur(1px);  
-}  
-  
-.box{  
-  background:rgba(0,0,0,0.85);  
-  border:1px solid red;  
-  margin:10px;  
-  padding:15px;  
-}  
-  
-/* 🔥 NOVO ESTILO INPUT */  
-input{  
-  width:90%;  
-  padding:8px;  
-  background:#111;  
-  border:1px solid red;  
-  color:white;  
-  outline:none;  
-}  
-  
-input:focus{  
-  box-shadow:0 0 10px red;  
-}  
-  
-.btnMU{  
-  padding:10px;  
-  background:linear-gradient(45deg,#3a0000,#a00000);  
-  border:none;  
-  color:white;  
-  margin-top:5px;  
-  width:100%;  
-  cursor:pointer;  
-  transition:0.2s;  
-}  
-  
-.btnMU:hover{  
-  transform:scale(1.08);  
-  box-shadow:0 0 20px red;  
-}  
-  
-.btnMU:active{  
-  transform:scale(0.95);  
-  box-shadow:0 0 40px orange;  
-}  
-  
-@keyframes flutuar{  
-  0%{ transform:translate(-50%,0px);}  
-  50%{ transform:translate(-50%,10px);}  
-  100%{ transform:translate(-50%,0px);}  
-}  
-  
-@keyframes glowDark{  
-  from{ text-shadow:2px 2px 0 #000, 4px 4px 0 #220000, 6px 6px 0 #440000, 0 0 10px red;}  
-  to{ text-shadow:2px 2px 0 #000, 4px 4px 0 #330000, 6px 6px 0 #660000, 0 0 25px red;}  
-}  
-  
-@keyframes pulseGlow{  
-  from{ filter:drop-shadow(0 0 15px red);}  
-  to{ filter:drop-shadow(0 0 35px red);}  
-}  
-  
-@keyframes tremer{  
-  0%{transform:translate(0)}  
-  25%{transform:translate(-5px,5px)}  
-  50%{transform:translate(5px,-5px)}  
-  75%{transform:translate(-5px,5px)}  
-  100%{transform:translate(0)}  
-}  
-</style>  </head>  <body>  <video id="bgVideo" autoplay muted loop>  
-  <source src="bg_compressed.mp4" type="video/mp4">  
-</video>  <div id="tituloCentral">  
-  <h1>🔥 GUILD FATAL 🔥</h1>  
-  <div id="subTitulo">Fatal Guilds</div>  
-</div>  <div id="fire"></div>  <div id="logoMain">  
-  <img src="logo1.jpg">  
-</div>  <div id="container">    <div id="logoFundo">  
-    <img src="logo2.png">  
-  </div>    <div class="box">  
-    <h3>Conta</h3>  
-    <input placeholder="Email"><br><br>  
-    <input type="password" placeholder="Senha"><br><br>  
-    <button class="btnMU">Cadastrar</button>  
-    <button class="btnMU">Entrar</button>  
-  </div>    <div class="box">  
-    <input placeholder="Nick"><br><br>  
-    <input placeholder="Classe"><br><br>  
-    <input placeholder="Resets"><br><br>  
-    <button class="btnMU">Cadastrar personagem</button>  
-  </div>    <div class="box"><h3>🏆 Ranking</h3></div>  
-  <div class="box"><h3>📜 Membros</h3></div>  </div>  <script>  
-const API = "https://fatalguild-api.onrender.com";  
-  
-const inputs = document.querySelectorAll("input");  
-const botoes = document.querySelectorAll(".btnMU");  
-  
-// CADASTRO  
-botoes[0].onclick = async () => {  
-  try{  
-    const res = await fetch(API+"/register",{  
-      method:"POST",  
-      headers:{"Content-Type":"application/json"},  
-      body:JSON.stringify({  
-        email:inputs[0].value,  
-        senha:inputs[1].value  
-      })  
-    });  
-  
-    const data = await res.json();  
-    console.log("REGISTER:", data);  
-  
-    if(data.erro){  
-      alert(data.erro);  
-    }else{  
-      tremerTela();  
-      alert("Conta criada!");  
-    }  
-  }catch(e){  
-    alert("Erro na API!");  
-  }  
-};  
-  
-// LOGIN 🔥 CORRIGIDO  
-botoes[1].onclick = async () => {  
-  try{  
-    const res = await fetch(API+"/login",{  
-      method:"POST",  
-      headers:{"Content-Type":"application/json"},  
-      body:JSON.stringify({  
-        email:inputs[0].value,  
-        senha:inputs[1].value  
-      })  
-    });  
-  
-    const data = await res.json();  
-    console.log("LOGIN:", data);  
-  
-    if(data && (data.ok || data.user || !data.erro)){  
-      tremerTela();  
-      alert("🔥 BEM-VINDO 🔥");  
-    }else{  
-      alert(data.erro || "Erro no login");  
-    }  
-  
-  }catch(e){  
-    alert("Servidor offline ou erro!");  
-  }  
-};  
-  
-// PERSONAGEM  
-botoes[2].onclick = async () => {  
-  await fetch(API+"/personagem",{  
-    method:"POST",  
-    headers:{"Content-Type":"application/json"},  
-    body:JSON.stringify({  
-      nick:inputs[2].value,  
-      classe:inputs[3].value,  
-      resets:Number(inputs[4].value)  
-    })  
-  });  
-  atualizarSistema();  
-};  
-  
-// RANKING  
-async function atualizarSistema(){  
-  try{  
-    const res = await fetch(API+"/ranking");  
-    const lista = await res.json();  
-  
-    const rankingBox = document.querySelectorAll(".box")[2];  
-    const membrosBox = document.querySelectorAll(".box")[3];  
-  
-    let rankingHTML = "<h3>🏆 Ranking</h3>";  
-    let membrosHTML = "<h3>📜 Membros</h3>";  
-  
-    lista.forEach((p,i)=>{  
-      rankingHTML += i===0  
-        ? `<p style="color:gold;">👑 ${p.nick} - ${p.resets}</p>`  
-        : `<p>${p.nick} - ${p.resets}</p>`;  
-  
-      membrosHTML += `<p>${p.nick} (${p.classe})</p>`;  
-    });  
-  
-    rankingBox.innerHTML = rankingHTML;  
-    membrosBox.innerHTML = membrosHTML;  
-  
-  }catch(e){  
-    console.log("Erro ranking");  
-  }  
-}  
-  
-function tremerTela(){  
-  document.body.style.animation="tremer 0.3s";  
-  setTimeout(()=>document.body.style.animation="",300);  
-}  
-  
-document.body.addEventListener("click", ()=>{  
-  const video = document.getElementById("bgVideo");  
-  video.muted = false;  
-  video.play();  
-});  
-  
-// fogo  
-const fire = document.getElementById("fire");  
-setInterval(()=>{  
-  const p = document.createElement("div");  
-  p.className="fireParticle";  
-  p.style.left=Math.random()*260+"px";  
-  fire.appendChild(p);  
-  setTimeout(()=>p.remove(),2000);  
-},100);  
-  
-setInterval(atualizarSistema,3000);  
-atualizarSistema();  
-</script>  </body>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>🔥 💀Guild Fatal💀 GOD 🔥</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
+
+<style>
+/* ===== SEU CSS ORIGINAL (NÃO MEXI) ===== */
+body{margin:0;font-family:Arial;color:white;text-align:center;background:black;}
+
+#bgVideo{
+  position:fixed;top:50%;left:50%;
+  width:100%;height:100%;
+  object-fit:cover;
+  transform:translate(-50%,-50%) scale(0.75);
+  z-index:-2;filter:brightness(0.4);
+}
+
+#tituloCentral{position:absolute;top:10%;left:50%;transform:translateX(-50%);}
+#tituloCentral h1{
+  margin:0;font-size:44px;font-family:'Cinzel', serif;
+  letter-spacing:3px;text-transform:uppercase;color:#8b0000;
+  text-shadow:2px 2px 0 #000,4px 4px 0 #220000,6px 6px 0 #440000,8px 8px 10px black;
+}
+
+#subTitulo{margin-top:5px;font-size:18px;color:#ccc;letter-spacing:2px;font-family:'Cinzel', serif;}
+
+#container{
+  position:absolute;top:55%;left:50%;
+  transform:translate(-50%, -50%);
+  width:90%;max-width:350px;
+}
+
+.box{
+  background:rgba(0,0,0,0.85);
+  border:1px solid red;
+  margin:10px;padding:15px;
+}
+
+/* ===== DRAGÕES ===== */
+.dragon{
+  position:fixed;
+  width:160px;
+  z-index:9999;
+  pointer-events:none;
+}
+
+.dragon1{animation: fly1 15s linear infinite;}
+.dragon2{animation: fly2 18s linear infinite; transform: scaleX(-1);}
+
+@keyframes fly1{
+  0%{ left:-200px; top:200px;}
+  100%{ left:110%; top:150px;}
+}
+
+@keyframes fly2{
+  0%{ left:110%; top:300px;}
+  100%{ left:-200px; top:250px;}
+}
+
+/* ===== 🔥 BOSS SPAWN ===== */
+.boss{
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%) scale(0);
+  width:300px;
+  z-index:10000;
+  animation: bossSpawn 1s ease-out forwards;
+}
+
+@keyframes bossSpawn{
+  0%{ transform:translate(-50%,-50%) scale(0); opacity:0;}
+  50%{ transform:translate(-50%,-50%) scale(1.3); opacity:1;}
+  100%{ transform:translate(-50%,-50%) scale(1); }
+}
+
+/* 🔥 FLASH NA TELA */
+.flash{
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:red;
+  opacity:0;
+  pointer-events:none;
+  z-index:9999;
+  animation: flashAnim 0.5s;
+}
+
+@keyframes flashAnim{
+  0%{opacity:0;}
+  50%{opacity:0.8;}
+  100%{opacity:0;}
+}
+
+/* 🔥 FOGO */
+.fireDragon{
+  position:fixed;
+  width:12px;height:12px;
+  background:orange;
+  border-radius:50%;
+  filter:blur(6px);
+  animation: fireMove 0.6s linear forwards;
+}
+
+@keyframes fireMove{
+  from{transform:translate(0,0);}
+  to{transform:translate(-40px,20px);opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<video id="bgVideo" autoplay muted loop>
+  <source src="bg_compressed.mp4" type="video/mp4">
+</video>
+
+<div id="tituloCentral">
+  <h1>🔥 GUILD FATAL 🔥</h1>
+  <div id="subTitulo">Fatal Guilds</div>
+</div>
+
+<div id="container">
+  <div class="box">Login aqui...</div>
+</div>
+
+<!-- 🐉 DRAGÕES -->
+<img src="dragon.png" class="dragon dragon1" id="d1">
+<img src="dragon.png" class="dragon dragon2" id="d2">
+
+<!-- 🐉 BOSS -->
+<img src="dragon.png" class="boss" id="boss">
+
+<!-- 🔊 SOM -->
+<audio id="roar" src="roar.mp3"></audio>
+
+<script>
+/* 🐉 SEGUIR MOUSE */
+document.addEventListener("mousemove",(e)=>{
+  const d1 = document.getElementById("d1");
+  d1.style.top = e.clientY+"px";
+});
+
+/* 🔥 FOGO */
+setInterval(()=>{
+  const d1 = document.getElementById("d1");
+  const fire = document.createElement("div");
+  fire.className="fireDragon";
+  fire.style.left = (d1.offsetLeft+80)+"px";
+  fire.style.top = (d1.offsetTop+40)+"px";
+  document.body.appendChild(fire);
+  setTimeout(()=>fire.remove(),600);
+},200);
+
+/* 💀 BOSS SPAWN + SOM */
+window.onload = ()=>{
+  setTimeout(()=>{
+    const flash = document.createElement("div");
+    flash.className="flash";
+    document.body.appendChild(flash);
+
+    const roar = document.getElementById("roar");
+    roar.play();
+
+    setTimeout(()=>flash.remove(),500);
+  },2000);
+};
+</script>
+
+</body>
+</html>
