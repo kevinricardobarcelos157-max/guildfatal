@@ -1,7 +1,7 @@
 <!DOCTYPE html>  <html lang="pt-BR">  
 <head>  
 <meta charset="UTF-8">  
-<title>🔥 Guild Fatal GOD 🔥</title>  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">  <style>  
+<title>🔥 💀Guild Fatal💀 GOD 🔥</title>  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">  <style>  
 body{  
   margin:0;  
   font-family:Arial;  
@@ -328,63 +328,4 @@ setInterval(()=>{
   
 setInterval(atualizarSistema,3000);  
 atualizarSistema();  
-</script>  </body>  
-/* 🎯 LOGIN CENTRALIZADO PERFEITO */
-#container{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-}
-
-.box{
-  background:rgba(20,0,0,0.95);
-  padding:20px;
-  border:1px solid red;
-  width:280px;
-  box-shadow:0 0 20px red;
-}
-
-/* ⚡ RAIO */
-let l=lightning.getContext("2d");
-lightning.width=innerWidth;lightning.height=innerHeight;
-
-function lightningFx(){
-l.clearRect(0,0,innerWidth,innerHeight);
-if(Math.random()<0.03){
-l.strokeStyle="white";
-l.beginPath();
-l.moveTo(Math.random()*innerWidth,0);
-l.lineTo(Math.random()*innerWidth,innerHeight);
-l.stroke();
-}
-requestAnimationFrame(lightningFx);
-}
-lightningFx();
-
-/* 🌋 LAVA 5d*/
-let lv=lava.getContext("2d");
-lava.width=innerWidth;lava.height=innerHeight;
-
-function lavaFx(){
-lv.fillStyle="rgba(255,80,0,0.12)";
-lv.fillRect(0,innerHeight-80,innerWidth,80);
-requestAnimationFrame(lavaFx);
-}
-lavaFx();
-
-/* ✨ MAGIA */
-let m=magic.getContext("2d");
-magic.width=innerWidth;magic.height=innerHeight;
-
-function magicFx(){
-m.fillStyle="purple";
-m.fillRect(Math.random()*innerWidth,Math.random()*innerHeight,2,2);
-requestAnimationFrame(magicFx);
-}
-magicFx();
-
-</script>
-
-</body>
-  </html>
+</script>  </body>
