@@ -2,201 +2,258 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🐯 Plataforma Tigrinho</title>
+<title>🔥 Guild Fatal GOD 🔥</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
 
 <style>
 body{
   margin:0;
   font-family:Arial;
-  background:linear-gradient(135deg,#0a0a0a,#1c1c1c);
   color:white;
   text-align:center;
+  background:black;
+  overflow-x:hidden;
+}
+
+/* VIDEO */
+#bgVideo{
+  position:fixed;
+  top:50%;
+  left:50%;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transform:translate(-50%, -50%) scale(0.75);
+  z-index:-6;
+  filter:brightness(0.4);
+}
+
+/* TITULO 3D */
+#tituloCentral{
+  position:absolute;
+  top:5%;
+  left:50%;
+  transform:translateX(-50%);
+}
+#tituloCentral h1{
+  font-size:52px;
+  font-family:'Cinzel', serif;
+  color:#ff0000;
+  text-shadow:
+    0 0 10px red,
+    0 0 20px red,
+    2px 2px 0 black,
+    4px 4px 10px rgba(0,0,0,0.9);
+  animation: glow 2s infinite alternate;
+}
+@keyframes glow{
+  from{ text-shadow:0 0 10px red; }
+  to{ text-shadow:0 0 35px red; }
 }
 
 /* CONTAINER */
-.screen{
-  display:none;
-  height:100vh;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
+#container{
+  position:absolute;
+  top:58%;
+  left:50%;
+  transform:translate(-50%,-50%);
 }
 
-.active{ display:flex; }
-
-/* CARD */
-.card{
-  background:#111;
-  padding:30px;
-  border-radius:15px;
-  box-shadow:0 0 20px rgba(255,140,0,0.5);
+/* BOX */
+.box{
+  background:rgba(20,0,0,0.95);
+  padding:20px;
+  border:1px solid red;
   width:300px;
-}
-
-/* INPUT */
-input{
-  width:100%;
-  padding:10px;
-  margin:10px 0;
-  border:none;
+  box-shadow:0 0 30px red;
+  margin-bottom:10px;
   border-radius:8px;
 }
 
-/* BUTTON */
-button{
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:8px;
-  background:orange;
-  color:black;
-  font-weight:bold;
-  cursor:pointer;
-  transition:0.3s;
-}
-
-button:hover{
-  background:#ffb84d;
-}
-
-/* LINKS */
-.link{
-  margin-top:10px;
-  font-size:14px;
-  cursor:pointer;
-  color:orange;
-}
-
-/* DASHBOARD */
-#dashboard{
-  padding:20px;
-}
-
-.games{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
-  gap:15px;
-  margin-top:20px;
-}
-
-.game{
-  background:#222;
-  padding:20px;
-  border-radius:10px;
-  transition:0.3s;
-  cursor:pointer;
-}
-
-.game:hover{
-  background:orange;
-  color:black;
-  transform:scale(1.05);
-}
-
-/* HEADER */
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.logout{
-  background:red;
+input,select{
+  width:90%;
+  padding:8px;
+  background:#111;
+  border:1px solid red;
   color:white;
+}
+
+.btnMU{
+  padding:10px;
+  background:linear-gradient(45deg,#3a0000,#a00000);
+  border:none;
+  color:white;
+  margin-top:5px;
+  width:100%;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.btnMU:hover{
+  background:linear-gradient(45deg,#ff0000,#700000);
+  box-shadow:0 0 10px red;
+}
+
+/* CHAT */
+#chatBox{
+  height:120px;
+  overflow:auto;
+  text-align:left;
+  font-size:13px;
+}
+
+/* RANKING */
+#rankingBox p:nth-child(2){color:gold;}
+#rankingBox p:nth-child(3){color:silver;}
+#rankingBox p:nth-child(4){color:#cd7f32;}
+
+/* MEMBROS */
+#membrosBox p{
+  border-bottom:1px solid #300;
+  padding:3px;
 }
 </style>
 </head>
 
 <body>
 
+<video id="bgVideo" autoplay muted loop>
+  <source src="bg_compressed.mp4" type="video/mp4">
+</video>
+
+<div id="tituloCentral">
+  <h1>🔥 GUILD FATAL 🔥</h1>
+</div>
+
+<div id="container">
+
 <!-- LOGIN -->
-<div id="login" class="screen active">
-  <div class="card">
-    <h2>🐯 Login</h2>
-    <input type="text" id="loginUser" placeholder="Usuário">
-    <input type="password" id="loginPass" placeholder="Senha">
-    <button onclick="login()">Entrar</button>
-    <div class="link" onclick="show('register')">Criar conta</div>
-    <div class="link" onclick="show('recover')">Esqueci a senha</div>
-  </div>
+<div class="box">
+<h3>Conta</h3>
+<input id="email" placeholder="Email"><br><br>
+<input id="senha" type="password" placeholder="Senha"><br><br>
+
+<button class="btnMU" id="btnRegister">Cadastrar</button>
+<button class="btnMU" id="btnLogin">Entrar</button>
+<button class="btnMU" id="btnLogout">Sair</button>
+
+<hr>
+
+<input id="recoverEmail" placeholder="Recuperar senha (Email)">
+<button class="btnMU" id="btnRecover">Recuperar Senha</button>
 </div>
 
-<!-- REGISTRO -->
-<div id="register" class="screen">
-  <div class="card">
-    <h2>📥 Cadastro</h2>
-    <input type="text" id="regUser" placeholder="Usuário">
-    <input type="password" id="regPass" placeholder="Senha">
-    <button onclick="register()">Cadastrar</button>
-    <div class="link" onclick="show('login')">Voltar</div>
-  </div>
+<!-- PERSONAGEM -->
+<div class="box">
+<input id="nick" placeholder="Nick"><br><br>
+<input id="classe" placeholder="Classe"><br><br>
+<input id="resets" placeholder="Resets"><br><br>
+<input id="level" placeholder="Level"><br><br>
+
+<select id="cargo">
+<option>Membro</option>
+<option>Moderador</option>
+<option>Líder</option>
+</select><br><br>
+
+<button class="btnMU" id="btnChar">Criar Personagem</button>
 </div>
 
-<!-- RECUPERAÇÃO -->
-<div id="recover" class="screen">
-  <div class="card">
-    <h2>🔐 Recuperar senha</h2>
-    <input type="text" placeholder="Digite seu usuário">
-    <button onclick="alert('Senha enviada (simulação)')">Recuperar</button>
-    <div class="link" onclick="show('login')">Voltar</div>
-  </div>
+<!-- GUILD -->
+<div class="box">
+<input id="guildNome" placeholder="Nome da Guild"><br><br>
+<button class="btnMU" id="btnCriarGuild">Criar Guild</button>
+<button class="btnMU" id="btnEntrarGuild">Entrar Guild</button>
+
+<div id="guildInfo"></div>
 </div>
 
-<!-- DASHBOARD -->
-<div id="dashboard" class="screen">
-  <div class="header">
-    <h2>🎰 Jogos</h2>
-    <button class="logout" onclick="logout()">Sair</button>
-  </div>
+<!-- CHAT -->
+<div class="box">
+<h3>Chat</h3>
+<div id="chatBox"></div>
+<input id="msg" placeholder="Mensagem"><br>
+<button class="btnMU" id="btnMsg">Enviar</button>
+</div>
 
-  <div class="games">
-    <div class="game">🐯 Fortune Tiger</div>
-    <div class="game">🐰 Fortune Rabbit</div>
-    <div class="game">🐉 Dragon Fortune</div>
-    <div class="game">🎲 Slots</div>
-    <div class="game">🎯 Crash</div>
-    <div class="game">🎰 Roleta</div>
-  </div>
+<div class="box" id="rankingBox"></div>
+<div class="box" id="membrosBox"></div>
+
 </div>
 
 <script>
-function show(screen){
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(screen).classList.add('active');
+const API="https://fatalguild-api.onrender.com";
+
+/* LOGIN */
+btnLogin.onclick=async()=>{
+let r=await fetch(API+"/login",{method:"POST",headers:{"Content-Type":"application/json"},
+body:JSON.stringify({email:email.value,senha:senha.value})});
+let d=await r.json();
+
+if(d.ok){
+localStorage.setItem("token",d.token);
+alert("Logado!");
+}
+};
+
+/* RECUPERAR SENHA */
+btnRecover.onclick=async()=>{
+await fetch(API+"/recover",{method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({email:recoverEmail.value})});
+alert("Se existir, email enviado!");
+};
+
+/* GUILD FEEDBACK */
+btnCriarGuild.onclick=async()=>{
+let token=localStorage.getItem("token");
+await fetch(API+"/guild/criar",{method:"POST",
+headers:{"Content-Type":"application/json","Authorization":token},
+body:JSON.stringify({nome:guildNome.value})});
+guildInfo.innerHTML="<p>Guild criada!</p>";
+};
+
+btnEntrarGuild.onclick=async()=>{
+let token=localStorage.getItem("token");
+await fetch(API+"/guild/entrar",{method:"POST",
+headers:{"Content-Type":"application/json","Authorization":token},
+body:JSON.stringify({nome:guildNome.value})});
+guildInfo.innerHTML="<p>Entrou na guild!</p>";
+};
+
+/* CHAT AUTO SCROLL */
+async function atualizarChat(){
+let token=localStorage.getItem("token");
+if(!token) return;
+
+let r=await fetch(API+"/guild/chat",{headers:{"Authorization":token}});
+let lista=await r.json();
+
+chatBox.innerHTML=lista.map(m=>`<p>${m}</p>`).join("");
+chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// Simulação de banco
-let users = JSON.parse(localStorage.getItem("users")) || {};
+/* RANKING PRO */
+async function atualizar(){
+let r=await fetch(API+"/ranking");
+let lista=await r.json();
 
-function register(){
-  let user = document.getElementById("regUser").value;
-  let pass = document.getElementById("regPass").value;
+let rk="<h3>🏆 Ranking TOP 10</h3>";
+let mb="<h3>📜 Membros</h3>";
 
-  if(!user || !pass) return alert("Preencha tudo!");
+lista.slice(0,10).forEach((p,i)=>{
+rk+=`<p>#${i+1} ${p.nick} - ${p.resets}</p>`;
+mb+=`<p>${p.nick} | Lv ${p.level}</p>`;
+});
 
-  users[user] = pass;
-  localStorage.setItem("users", JSON.stringify(users));
-
-  alert("Conta criada!");
-  show('login');
+rankingBox.innerHTML=rk;
+membrosBox.innerHTML=mb;
 }
 
-function login(){
-  let user = document.getElementById("loginUser").value;
-  let pass = document.getElementById("loginPass").value;
-
-  if(users[user] === pass){
-    show('dashboard');
-  } else {
-    alert("Login inválido");
-  }
-}
-
-function logout(){
-  show('login');
-}
+setInterval(()=>{atualizar(); atualizarChat();},4000);
+atualizar();
 </script>
 
 </body>
-                                                                    </html>
+</html>
