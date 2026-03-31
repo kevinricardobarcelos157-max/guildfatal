@@ -16,17 +16,6 @@ body{
   overflow:hidden;
 }
 
-/* FLASH */
-#flash{
-  position:fixed;
-  width:100%;
-  height:100%;
-  background:white;
-  opacity:0;
-  pointer-events:none;
-  z-index:999;
-}
-
 /* VIDEO */
 #bgVideo{
   position:fixed;
@@ -41,60 +30,22 @@ body{
 }
 
 /* CANVAS */
-canvas{
-  position:fixed;
-  top:0;
-  left:0;
-  pointer-events:none;
-}
+canvas{position:fixed;top:0;left:0;pointer-events:none;}
 #lightning{z-index:-5;}
 #lava{z-index:-4;}
 #magic{z-index:-3;}
-#dragon{z-index:-2;}
 
-/* TITULO */
-#tituloCentral{
-  position:absolute;
-  top:10%;
-  left:50%;
-  transform:translateX(-50%);
-}
-#tituloCentral h1{
-  font-size:44px;
-  font-family:'Cinzel', serif;
-  color:#8b0000;
-  text-shadow:0 0 25px red;
-}
-
-/* LOGO */
-#logoMain{
-  position:absolute;
-  top:22%;
-  left:50%;
-  transform:translateX(-50%);
-}
-#logoMain img{
-  width:220px;
-  filter:drop-shadow(0 0 25px red);
-}
-
-/* CONTAINER */
-#container{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-}
-
-/* BOX */
+/* UI */
 .box{
   background:rgba(20,0,0,0.95);
   padding:20px;
   border:1px solid red;
   width:300px;
   box-shadow:0 0 30px red;
-  margin-bottom:10px;
+  margin:10px auto;
 }
+
+.gold{color:gold;text-shadow:0 0 15px gold;}
 
 input,select{
   width:90%;
@@ -118,8 +69,6 @@ input,select{
 
 <body>
 
-<div id="flash"></div>
-
 <video id="bgVideo" autoplay muted loop>
   <source src="bg_compressed.mp4" type="video/mp4">
 </video>
@@ -127,30 +76,27 @@ input,select{
 <canvas id="lightning"></canvas>
 <canvas id="lava"></canvas>
 <canvas id="magic"></canvas>
-<canvas id="dragon"></canvas>
 
-<div id="tituloCentral">
-  <h1>🔥 GUILD FATAL 🔥</h1>
-</div>
-
-<div id="logoMain">
-  <img src="logo1.jpg">
-</div>
-
-<div id="container">
-
-<div class="box">
-<h3>Conta</h3>
+<!-- LOGIN -->
+<div class="box" id="loginBox">
+<h3>Login</h3>
 <input id="email" placeholder="Email"><br><br>
 <input id="senha" type="password" placeholder="Senha"><br><br>
 
 <button class="btnMU" id="btnRegister">Cadastrar</button>
 <button class="btnMU" id="btnLogin">Entrar</button>
+</div>
+
+<!-- PAINEL -->
+<div id="painel" style="display:none">
+
+<div class="box">
+<h3>Painel</h3>
 <button class="btnMU" id="btnLogout">Sair</button>
-<button class="btnMU" id="btnRecuperar">Recuperar</button>
 </div>
 
 <div class="box">
+<h3>Personagem</h3>
 <input id="nick" placeholder="Nick"><br><br>
 <input id="classe" placeholder="Classe"><br><br>
 <input id="resets" placeholder="Resets"><br><br>
@@ -165,39 +111,182 @@ input,select{
 <button class="btnMU" id="btnChar">Criar Personagem</button>
 </div>
 
+<!-- GUILD -->
+<div class="box">
+<h3>Guilda</h3>
+<input id="guildNome" placeholder="Nome da Guild"><br><br>
+
+<button class="btnMU" id="btnCriarGuild">Criar Guild</button>
+<button class="btnMU" id="btnEntrarGuild">Entrar Guild</button>
+
+<div id="guildInfo"></div>
+
+<input id="membroNome" placeholder="Nome do membro"><br>
+<button class="btnMU" id="btnPromover">Promover</button>
+<button class="btnMU" id="btnRemover">Remover</button>
+</div>
+
+<!-- CHAT -->
+<div class="box">
+<h3>Chat da Guild</h3>
+<div id="chatBox" style="height:120px;overflow:auto;"></div>
+<input id="msg" placeholder="Mensagem"><br>
+<button class="btnMU" id="btnMsg">Enviar</button>
+</div>
+
 <div class="box" id="rankingBox"></div>
-<div class="box" id="membrosBox"></div>
 
 </div>
 
 <script>
 const API="https://fatalguild-api.onrender.com";
 
-/* LOGIN IMPACTO */
-btnLogin.onclick=async()=>{
-let r=await fetch(API+"/login",{method:"POST",headers:{"Content-Type":"application/json"},
-body:JSON.stringify({email:email.value,senha:senha.value})});
-let d=await r.json();
-if(d.ok){
-localStorage.setItem("token",d.token);
-impacto();
-alert("🔥 BEM-VINDO 🔥");
+/* AUTO LOGIN */
+window.onload=()=>{
+let token=localStorage.getItem("token");
+if(token){
+loginBox.style.display="none";
+painel.style.display="block";
 }
 };
 
-/* IMPACTO VISUAL */
-function impacto(){
-document.body.style.transform="scale(1.05)";
-setTimeout(()=>document.body.style.transform="scale(1)",200);
+/* LOGIN */
+btnLogin.onclick=async()=>{
+let r=await fetch(API+"/login",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({email:email.value,senha:senha.value})
+});
+let d=await r.json();
+
+if(d.ok){
+localStorage.setItem("token",d.token);
+location.reload();
+}else alert("Erro login");
+};
+
+/* REGISTER */
+btnRegister.onclick=async()=>{
+await fetch(API+"/register",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({email:email.value,senha:senha.value})
+});
+alert("Conta criada!");
+};
+
+/* LOGOUT */
+btnLogout.onclick=()=>{
+localStorage.removeItem("token");
+location.reload();
+};
+
+/* PERSONAGEM */
+btnChar.onclick=async()=>{
+let token=localStorage.getItem("token");
+
+await fetch(API+"/personagem",{
+method:"POST",
+headers:{"Content-Type":"application/json","Authorization":token},
+body:JSON.stringify({
+nick:nick.value,
+classe:classe.value,
+resets:+resets.value,
+level:+level.value,
+cargo:cargo.value
+})
+});
+alert("OK");
+};
+
+/* GUILD */
+btnCriarGuild.onclick=async()=>{
+let token=localStorage.getItem("token");
+await fetch(API+"/guild/criar",{method:"POST",headers:{"Content-Type":"application/json","Authorization":token},body:JSON.stringify({nome:guildNome.value})});
+};
+
+btnEntrarGuild.onclick=async()=>{
+let token=localStorage.getItem("token");
+await fetch(API+"/guild/entrar",{method:"POST",headers:{"Content-Type":"application/json","Authorization":token},body:JSON.stringify({nome:guildNome.value})});
+};
+
+btnPromover.onclick=async()=>{
+let token=localStorage.getItem("token");
+await fetch(API+"/guild/promover",{method:"POST",headers:{"Content-Type":"application/json","Authorization":token},body:JSON.stringify({nome:membroNome.value})});
+};
+
+btnRemover.onclick=async()=>{
+let token=localStorage.getItem("token");
+await fetch(API+"/guild/remover",{method:"POST",headers:{"Content-Type":"application/json","Authorization":token},body:JSON.stringify({nome:membroNome.value})});
+};
+
+/* CHAT */
+btnMsg.onclick=async()=>{
+let token=localStorage.getItem("token");
+await fetch(API+"/guild/chat",{method:"POST",headers:{"Content-Type":"application/json","Authorization":token},body:JSON.stringify({msg:msg.value})});
+msg.value="";
+};
+
+async function atualizarChat(){
+let token=localStorage.getItem("token");
+if(!token) return;
+
+let r=await fetch(API+"/guild/chat",{headers:{"Authorization":token}});
+let lista=await r.json();
+
+let html="";
+lista.forEach(m=>{
+html+=`<p>${m}</p>`;
+});
+chatBox.innerHTML=html;
 }
+
+/* GUILD INFO */
+async function atualizarGuild(){
+let token=localStorage.getItem("token");
+let r=await fetch(API+"/guild",{headers:{"Authorization":token}});
+let g=await r.json();
+
+if(g.nome){
+let html="<h4>"+g.nome+"</h4>";
+g.membros.forEach(m=> html+=`<p>${m}</p>`);
+guildInfo.innerHTML=html;
+}
+}
+
+/* RANKING */
+async function atualizar(){
+let r=await fetch(API+"/ranking");
+let lista=await r.json();
+
+let html="<h3>Ranking</h3>";
+
+lista.forEach((p,i)=>{
+if(i==0){
+html+=`<p class='gold'>🥇 ${p.nick} - ${p.resets}</p>`;
+}else{
+html+=`<p>${p.nick} - ${p.resets}</p>`;
+}
+});
+
+rankingBox.innerHTML=html;
+}
+
+/* LOOP */
+setInterval(()=>{
+atualizar();
+atualizarGuild();
+atualizarChat();
+},4000);
+
+atualizar();
 
 /* SOM */
 document.body.onclick=()=>{bgVideo.muted=false;bgVideo.play();};
 
-/* ⚡ RAIO + FLASH */
+/* EFEITOS */
 let l=lightning.getContext("2d");
 lightning.width=innerWidth;lightning.height=innerHeight;
-
 function lightningFx(){
 l.clearRect(0,0,innerWidth,innerHeight);
 if(Math.random()<0.02){
@@ -206,104 +295,38 @@ l.beginPath();
 l.moveTo(Math.random()*innerWidth,0);
 l.lineTo(Math.random()*innerWidth,innerHeight);
 l.stroke();
-
-flash.style.opacity=0.8;
-setTimeout(()=>flash.style.opacity=0,100);
 }
 requestAnimationFrame(lightningFx);
 }
 lightningFx();
 
-/* 🌋 LAVA SUBINDO */
-const lavaCanvas=lava;
-const ctx=lavaCanvas.getContext("2d");
-lavaCanvas.width=innerWidth;lavaCanvas.height=innerHeight;
-
-let t=0,altura=120;
-
+let ctx=lava.getContext("2d");
+lava.width=innerWidth;lava.height=innerHeight;
+let t=0;
 function lavaFx(){
-ctx.clearRect(0,0,lavaCanvas.width,lavaCanvas.height);
-
-altura += 0.02; // sobe lentamente
-
-let base=lavaCanvas.height-altura;
-
+ctx.clearRect(0,0,lava.width,lava.height);
 ctx.beginPath();
-ctx.moveTo(0,lavaCanvas.height);
-
-for(let x=0;x<=lavaCanvas.width;x+=10){
-let y=base+Math.sin(x*0.01+t)*10;
-ctx.lineTo(x,y);
+ctx.moveTo(0,lava.height);
+for(let x=0;x<=lava.width;x+=10){
+ctx.lineTo(x,lava.height-100+Math.sin(x*0.01+t)*10);
 }
-
-ctx.lineTo(lavaCanvas.width,lavaCanvas.height);
-ctx.closePath();
-
-let g=ctx.createLinearGradient(0,base,0,lavaCanvas.height);
-g.addColorStop(0,"#ff4500");
-g.addColorStop(0.5,"#ff0000");
-g.addColorStop(1,"#330000");
-
-ctx.fillStyle=g;
-ctx.shadowBlur=40;
-ctx.shadowColor="red";
+ctx.lineTo(lava.width,lava.height);
+ctx.fillStyle="red";
 ctx.fill();
-
 t+=0.05;
 requestAnimationFrame(lavaFx);
 }
 lavaFx();
 
-/* ✨ MAGIA */
 let m=magic.getContext("2d");
 magic.width=innerWidth;magic.height=innerHeight;
 function magicFx(){
-m.fillStyle="rgba(150,0,255,0.3)";
+m.fillStyle="purple";
 m.fillRect(Math.random()*innerWidth,Math.random()*innerHeight,2,2);
 requestAnimationFrame(magicFx);
 }
 magicFx();
-
-/* 🐉 DRAGÃO SOMBRA */
-let d=dragon.getContext("2d");
-dragon.width=innerWidth;dragon.height=innerHeight;
-
-let dx=-300;
-
-function dragonFx(){
-d.clearRect(0,0,innerWidth,innerHeight);
-
-d.fillStyle="rgba(0,0,0,0.3)";
-d.fillRect(dx,100,300,80); // sombra simples
-
-dx+=2;
-if(dx>innerWidth+300) dx=-300;
-
-requestAnimationFrame(dragonFx);
-}
-dragonFx();
-
-/* RANKING */
-async function atualizar(){
-let r=await fetch(API+"/ranking");
-let lista=await r.json();
-
-lista.sort((a,b)=> (b.resets+b.level)-(a.resets+a.level));
-
-let rk="<h3>🏆 Ranking</h3>";
-let mb="<h3>📜 Membros</h3>";
-
-lista.slice(0,100).forEach(p=>{
-rk+=`<p>${p.nick} - ${p.resets}</p>`;
-mb+=`<p>${p.nick} | Lv ${p.level} | ${p.cargo}</p>`;
-});
-
-rankingBox.innerHTML=rk;
-membrosBox.innerHTML=mb;
-}
-setInterval(atualizar,5000);
-atualizar();
 </script>
 
 </body>
-</html>
+  </html>
