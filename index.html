@@ -45,7 +45,7 @@ canvas{position:fixed;top:0;left:0;pointer-events:none;}
   width:100%;
 }
 
-/* 👑 NOME FIXO (SEM ANIMAÇÃO) */
+/* 👑 NOME FIXO (ÚNICA ALTERAÇÃO) */
 #tituloCentral h1{
   font-size: clamp(48px, 7vw, 90px);
   font-family:'Cinzel', serif;
@@ -53,15 +53,19 @@ canvas{position:fixed;top:0;left:0;pointer-events:none;}
   letter-spacing:4px;
   display:inline-block;
   text-shadow:0 0 40px red, 4px 4px 0 black;
+
+  animation:none !important;
+  transform:translateX(0) !important;
 }
 
-/* REMOVE APENAS OS EFEITOS ANIMADOS */
+/* REMOVE EFEITOS QUE CAUSAM MOVIMENTO */
 #tituloCentral h1::before,
 #tituloCentral h1::after{
-  content:none;
+  content:none !important;
+  animation:none !important;
 }
 
-/* animações continuam no código mas NÃO aplicadas */
+/* (mantidos, mas não usados) */
 @keyframes brilho{100%{left:200%;}}
 @keyframes fogo{to{transform:translateY(-5px);}}
 @keyframes tremor{
@@ -69,7 +73,7 @@ canvas{position:fixed;top:0;left:0;pointer-events:none;}
   50%{transform:translate(-1px,1px);}
 }
 
-/* 🔒 LOGO FIXO */
+/* LOGO */
 #logoMain{
   position:absolute;
   top:17%;
@@ -91,7 +95,7 @@ canvas{position:fixed;top:0;left:0;pointer-events:none;}
   100%{transform:scale(1);}
 }
 
-/* 🔥 CONTAINER FIXO (INALTERADO) */
+/* CONTAINER */
 #container{
   position:fixed;
   top:50%;
@@ -100,7 +104,7 @@ canvas{position:fixed;top:0;left:0;pointer-events:none;}
   z-index:10;
 }
 
-/* 🚫 TRAVA TUDO MENOS O NOME (original mantido) */
+/* TRAVA */
 #container,
 .box,
 #logoMain{
@@ -156,7 +160,7 @@ input,select{
 <canvas id="particles"></canvas>
 
 <div id="tituloCentral">
-  <h1>👑☠️ GUILD FATAL ☠️👑</h1>
+  <h1 data-text="👑☠️ GUILD FATAL ☠️👑">👑☠️ GUILD FATAL ☠️👑</h1>
 </div>
 
 <div id="logoMain">
@@ -242,4 +246,4 @@ document.body.onclick=()=>{bgVideo.muted=false;bgVideo.play();};
 </script>
 
 </body>
-  </html>
+                                          </html>
