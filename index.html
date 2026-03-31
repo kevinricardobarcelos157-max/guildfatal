@@ -35,17 +35,49 @@ canvas{position:fixed;top:0;left:0;pointer-events:none;}
 #lava{z-index:-4;}
 #magic{z-index:-3;}
 
-/* UI */
+/* TITULO */
+#tituloCentral{
+  position:absolute;
+  top:10%;
+  left:50%;
+  transform:translateX(-50%);
+}
+#tituloCentral h1{
+  font-size:44px;
+  font-family:'Cinzel', serif;
+  color:#8b0000;
+  text-shadow:0 0 25px red;
+}
+
+/* LOGO */
+#logoMain{
+  position:absolute;
+  top:22%;
+  left:50%;
+  transform:translateX(-50%);
+}
+#logoMain img{
+  width:220px;
+  filter:drop-shadow(0 0 25px red);
+}
+
+/* CONTAINER */
+#container{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+}
+
+/* BOX */
 .box{
   background:rgba(20,0,0,0.95);
   padding:20px;
   border:1px solid red;
   width:300px;
   box-shadow:0 0 30px red;
-  margin:10px auto;
+  margin-bottom:10px;
 }
-
-.gold{color:gold;text-shadow:0 0 15px gold;}
 
 input,select{
   width:90%;
@@ -64,6 +96,11 @@ input,select{
   width:100%;
   cursor:pointer;
 }
+
+#chatBox{
+  height:100px;
+  overflow:auto;
+}
 </style>
 </head>
 
@@ -77,26 +114,29 @@ input,select{
 <canvas id="lava"></canvas>
 <canvas id="magic"></canvas>
 
+<div id="tituloCentral">
+  <h1>🔥 GUILD FATAL 🔥</h1>
+</div>
+
+<div id="logoMain">
+  <img src="logo1.jpg">
+</div>
+
+<div id="container">
+
 <!-- LOGIN -->
-<div class="box" id="loginBox">
-<h3>Login</h3>
+<div class="box">
+<h3>Conta</h3>
 <input id="email" placeholder="Email"><br><br>
 <input id="senha" type="password" placeholder="Senha"><br><br>
 
 <button class="btnMU" id="btnRegister">Cadastrar</button>
 <button class="btnMU" id="btnLogin">Entrar</button>
-</div>
-
-<!-- PAINEL -->
-<div id="painel" style="display:none">
-
-<div class="box">
-<h3>Painel</h3>
 <button class="btnMU" id="btnLogout">Sair</button>
 </div>
 
+<!-- PERSONAGEM -->
 <div class="box">
-<h3>Personagem</h3>
 <input id="nick" placeholder="Nick"><br><br>
 <input id="classe" placeholder="Classe"><br><br>
 <input id="resets" placeholder="Resets"><br><br>
@@ -113,80 +153,54 @@ input,select{
 
 <!-- GUILD -->
 <div class="box">
-<h3>Guilda</h3>
 <input id="guildNome" placeholder="Nome da Guild"><br><br>
-
 <button class="btnMU" id="btnCriarGuild">Criar Guild</button>
 <button class="btnMU" id="btnEntrarGuild">Entrar Guild</button>
 
 <div id="guildInfo"></div>
-
-<input id="membroNome" placeholder="Nome do membro"><br>
-<button class="btnMU" id="btnPromover">Promover</button>
-<button class="btnMU" id="btnRemover">Remover</button>
 </div>
 
 <!-- CHAT -->
 <div class="box">
-<h3>Chat da Guild</h3>
-<div id="chatBox" style="height:120px;overflow:auto;"></div>
+<h3>Chat</h3>
+<div id="chatBox"></div>
 <input id="msg" placeholder="Mensagem"><br>
 <button class="btnMU" id="btnMsg">Enviar</button>
 </div>
 
 <div class="box" id="rankingBox"></div>
+<div class="box" id="membrosBox"></div>
 
 </div>
 
 <script>
 const API="https://fatalguild-api.onrender.com";
 
-/* AUTO LOGIN */
-window.onload=()=>{
-let token=localStorage.getItem("token");
-if(token){
-loginBox.style.display="none";
-painel.style.display="block";
-}
-};
-
 /* LOGIN */
 btnLogin.onclick=async()=>{
-let r=await fetch(API+"/login",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({email:email.value,senha:senha.value})
-});
+let r=await fetch(API+"/login",{method:"POST",headers:{"Content-Type":"application/json"},
+body:JSON.stringify({email:email.value,senha:senha.value})});
 let d=await r.json();
 
 if(d.ok){
 localStorage.setItem("token",d.token);
-location.reload();
-}else alert("Erro login");
+alert("Logado!");
+}
 };
 
-/* REGISTER */
 btnRegister.onclick=async()=>{
-await fetch(API+"/register",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({email:email.value,senha:senha.value})
-});
+await fetch(API+"/register",{method:"POST",headers:{"Content-Type":"application/json"},
+body:JSON.stringify({email:email.value,senha:senha.value})});
 alert("Conta criada!");
 };
 
-/* LOGOUT */
-btnLogout.onclick=()=>{
-localStorage.removeItem("token");
-location.reload();
-};
+btnLogout.onclick=()=>{localStorage.removeItem("token");};
 
 /* PERSONAGEM */
 btnChar.onclick=async()=>{
 let token=localStorage.getItem("token");
 
-await fetch(API+"/personagem",{
-method:"POST",
+await fetch(API+"/personagem",{method:"POST",
 headers:{"Content-Type":"application/json","Authorization":token},
 body:JSON.stringify({
 nick:nick.value,
@@ -194,36 +208,30 @@ classe:classe.value,
 resets:+resets.value,
 level:+level.value,
 cargo:cargo.value
-})
-});
-alert("OK");
+})});
 };
 
 /* GUILD */
 btnCriarGuild.onclick=async()=>{
 let token=localStorage.getItem("token");
-await fetch(API+"/guild/criar",{method:"POST",headers:{"Content-Type":"application/json","Authorization":token},body:JSON.stringify({nome:guildNome.value})});
+await fetch(API+"/guild/criar",{method:"POST",
+headers:{"Content-Type":"application/json","Authorization":token},
+body:JSON.stringify({nome:guildNome.value})});
 };
 
 btnEntrarGuild.onclick=async()=>{
 let token=localStorage.getItem("token");
-await fetch(API+"/guild/entrar",{method:"POST",headers:{"Content-Type":"application/json","Authorization":token},body:JSON.stringify({nome:guildNome.value})});
-};
-
-btnPromover.onclick=async()=>{
-let token=localStorage.getItem("token");
-await fetch(API+"/guild/promover",{method:"POST",headers:{"Content-Type":"application/json","Authorization":token},body:JSON.stringify({nome:membroNome.value})});
-};
-
-btnRemover.onclick=async()=>{
-let token=localStorage.getItem("token");
-await fetch(API+"/guild/remover",{method:"POST",headers:{"Content-Type":"application/json","Authorization":token},body:JSON.stringify({nome:membroNome.value})});
+await fetch(API+"/guild/entrar",{method:"POST",
+headers:{"Content-Type":"application/json","Authorization":token},
+body:JSON.stringify({nome:guildNome.value})});
 };
 
 /* CHAT */
 btnMsg.onclick=async()=>{
 let token=localStorage.getItem("token");
-await fetch(API+"/guild/chat",{method:"POST",headers:{"Content-Type":"application/json","Authorization":token},body:JSON.stringify({msg:msg.value})});
+await fetch(API+"/guild/chat",{method:"POST",
+headers:{"Content-Type":"application/json","Authorization":token},
+body:JSON.stringify({msg:msg.value})});
 msg.value="";
 };
 
@@ -234,24 +242,7 @@ if(!token) return;
 let r=await fetch(API+"/guild/chat",{headers:{"Authorization":token}});
 let lista=await r.json();
 
-let html="";
-lista.forEach(m=>{
-html+=`<p>${m}</p>`;
-});
-chatBox.innerHTML=html;
-}
-
-/* GUILD INFO */
-async function atualizarGuild(){
-let token=localStorage.getItem("token");
-let r=await fetch(API+"/guild",{headers:{"Authorization":token}});
-let g=await r.json();
-
-if(g.nome){
-let html="<h4>"+g.nome+"</h4>";
-g.membros.forEach(m=> html+=`<p>${m}</p>`);
-guildInfo.innerHTML=html;
-}
+chatBox.innerHTML=lista.map(m=>`<p>${m}</p>`).join("");
 }
 
 /* RANKING */
@@ -259,26 +250,19 @@ async function atualizar(){
 let r=await fetch(API+"/ranking");
 let lista=await r.json();
 
-let html="<h3>Ranking</h3>";
+let rk="<h3>🏆 Ranking</h3>";
+let mb="<h3>📜 Membros</h3>";
 
-lista.forEach((p,i)=>{
-if(i==0){
-html+=`<p class='gold'>🥇 ${p.nick} - ${p.resets}</p>`;
-}else{
-html+=`<p>${p.nick} - ${p.resets}</p>`;
-}
+lista.forEach(p=>{
+rk+=`<p>${p.nick} - ${p.resets}</p>`;
+mb+=`<p>${p.nick} | Lv ${p.level}</p>`;
 });
 
-rankingBox.innerHTML=html;
+rankingBox.innerHTML=rk;
+membrosBox.innerHTML=mb;
 }
 
-/* LOOP */
-setInterval(()=>{
-atualizar();
-atualizarGuild();
-atualizarChat();
-},4000);
-
+setInterval(()=>{atualizar(); atualizarChat();},4000);
 atualizar();
 
 /* SOM */
@@ -329,4 +313,4 @@ magicFx();
 </script>
 
 </body>
-  </html>
+</html>
