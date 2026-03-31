@@ -2,173 +2,307 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>🔥 Painel GM PRO - Mu Online 🔥</title>
+<title>🔥 Guild Fatal GOD 🔥</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
 
 <style>
 body{
-    background:#050505;
-    color:#00ffcc;
-    font-family:Arial;
-    padding:20px;
+  margin:0;
+  font-family:Arial;
+  color:white;
+  text-align:center;
+  background:black;
+  overflow:hidden;
 }
 
-h1{
-    text-align:center;
-    color:#00ffff;
+/* FLASH */
+#flash{
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:white;
+  opacity:0;
+  pointer-events:none;
+  z-index:999;
 }
 
-.section{
-    border:1px solid #00ffcc;
-    padding:15px;
-    margin:15px 0;
-    border-radius:10px;
+/* VIDEO */
+#bgVideo{
+  position:fixed;
+  top:50%;
+  left:50%;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transform:translate(-50%, -50%) scale(0.75);
+  z-index:-6;
+  filter:brightness(0.4);
 }
 
-button{
-    background:#00ffcc;
-    border:none;
-    padding:8px;
-    margin:5px;
-    cursor:pointer;
-    border-radius:5px;
-    font-weight:bold;
+/* CANVAS */
+canvas{
+  position:fixed;
+  top:0;
+  left:0;
+  pointer-events:none;
+}
+#lightning{z-index:-5;}
+#lava{z-index:-4;}
+#magic{z-index:-3;}
+#dragon{z-index:-2;}
+
+/* TITULO */
+#tituloCentral{
+  position:absolute;
+  top:10%;
+  left:50%;
+  transform:translateX(-50%);
+}
+#tituloCentral h1{
+  font-size:44px;
+  font-family:'Cinzel', serif;
+  color:#8b0000;
+  text-shadow:0 0 25px red;
 }
 
-input, select{
-    padding:5px;
-    margin:5px;
-    background:#111;
-    color:#0f0;
-    border:1px solid #00ffcc;
+/* LOGO */
+#logoMain{
+  position:absolute;
+  top:22%;
+  left:50%;
+  transform:translateX(-50%);
+}
+#logoMain img{
+  width:220px;
+  filter:drop-shadow(0 0 25px red);
 }
 
-#output{
-    background:#111;
-    padding:10px;
-    margin-top:10px;
-    color:#00ff00;
+/* CONTAINER */
+#container{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+}
+
+/* BOX */
+.box{
+  background:rgba(20,0,0,0.95);
+  padding:20px;
+  border:1px solid red;
+  width:300px;
+  box-shadow:0 0 30px red;
+  margin-bottom:10px;
+}
+
+input,select{
+  width:90%;
+  padding:8px;
+  background:#111;
+  border:1px solid red;
+  color:white;
+}
+
+.btnMU{
+  padding:10px;
+  background:linear-gradient(45deg,#3a0000,#a00000);
+  border:none;
+  color:white;
+  margin-top:5px;
+  width:100%;
+  cursor:pointer;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🔥 PAINEL GM PRO 🔥</h1>
+<div id="flash"></div>
 
-<div class="section">
-<h2>🎮 Teleporte</h2>
+<video id="bgVideo" autoplay muted loop>
+  <source src="bg_compressed.mp4" type="video/mp4">
+</video>
 
-Nick: <input id="nick" placeholder="Nick">
-Mapa:
-<select id="mapa">
-<option value="0">Lorencia</option>
-<option value="2">Devias</option>
-<option value="3">Noria</option>
-<option value="7">Atlans</option>
-<option value="8">Tarkan</option>
-<option value="33">Aida</option>
-</select>
+<canvas id="lightning"></canvas>
+<canvas id="lava"></canvas>
+<canvas id="magic"></canvas>
+<canvas id="dragon"></canvas>
 
-X: <input id="x" value="125">
-Y: <input id="y" value="125">
-
-<br>
-
-<button onclick="gmove()">Gerar /gmove</button>
+<div id="tituloCentral">
+  <h1>🔥 GUILD FATAL 🔥</h1>
 </div>
 
-<div class="section">
-<h2>💎 Criador de Item</h2>
-
-Grupo: <input id="g" value="0">
-Index: <input id="i" value="19">
-Level: <input id="l" value="13">
-Skill:
-<select id="s">
-<option value="1">Sim</option>
-<option value="0">Não</option>
-</select>
-
-Luck:
-<select id="lk">
-<option value="1">Sim</option>
-<option value="0">Não</option>
-</select>
-
-Option: <input id="op" value="7">
-
-Excellent:
-<select id="ex">
-<option value="32">+10% dmg</option>
-<option value="56">FULL (32+16+8)</option>
-<option value="0">Nenhum</option>
-</select>
-
-<br>
-
-<button onclick="drop()">Gerar /drop</button>
+<div id="logoMain">
+  <img src="logo1.jpg">
 </div>
 
-<div class="section">
-<h2>⚔️ Comandos Rápidos</h2>
+<div id="container">
 
-<button onclick="cmd('/gmoveall')">Mover Todos</button>
-<button onclick="cmd('/online')">Players Online</button>
-<button onclick="cmd('/fire')">Fogos</button>
-<button onclick="cmd('/clearinv')">Limpar Inventário</button>
-<button onclick="cmd('/pkclear')">Limpar PK</button>
+<div class="box">
+<h3>Conta</h3>
+<input id="email" placeholder="Email"><br><br>
+<input id="senha" type="password" placeholder="Senha"><br><br>
+
+<button class="btnMU" id="btnRegister">Cadastrar</button>
+<button class="btnMU" id="btnLogin">Entrar</button>
+<button class="btnMU" id="btnLogout">Sair</button>
+<button class="btnMU" id="btnRecuperar">Recuperar</button>
 </div>
 
-<div class="section">
-<h2>👤 Controle de Player</h2>
+<div class="box">
+<input id="nick" placeholder="Nick"><br><br>
+<input id="classe" placeholder="Classe"><br><br>
+<input id="resets" placeholder="Resets"><br><br>
+<input id="level" placeholder="Level"><br><br>
 
-Nick: <input id="nick2" placeholder="Nick">
+<select id="cargo">
+<option>Membro</option>
+<option>Moderador</option>
+<option>Líder</option>
+</select><br><br>
 
-<br>
-
-<button onclick="player('/disconnect')">Desconectar</button>
-<button onclick="player('/trace')">Ir até player</button>
-<button onclick="player('/pk')">Dar PK</button>
-<button onclick="player('/pkclear')">Limpar PK</button>
+<button class="btnMU" id="btnChar">Criar Personagem</button>
 </div>
 
-<div class="section">
-<h2>📜 Resultado</h2>
-<div id="output">Comando aparecerá aqui...</div>
+<div class="box" id="rankingBox"></div>
+<div class="box" id="membrosBox"></div>
+
 </div>
 
 <script>
-function gmove(){
-    let nick = document.getElementById("nick").value;
-    let mapa = document.getElementById("mapa").value;
-    let x = document.getElementById("x").value;
-    let y = document.getElementById("y").value;
+const API="https://fatalguild-api.onrender.com";
 
-    document.getElementById("output").innerText =
-    `/gmove ${nick} ${mapa} ${x} ${y}`;
+/* LOGIN IMPACTO */
+btnLogin.onclick=async()=>{
+let r=await fetch(API+"/login",{method:"POST",headers:{"Content-Type":"application/json"},
+body:JSON.stringify({email:email.value,senha:senha.value})});
+let d=await r.json();
+if(d.ok){
+localStorage.setItem("token",d.token);
+impacto();
+alert("🔥 BEM-VINDO 🔥");
+}
+};
+
+/* IMPACTO VISUAL */
+function impacto(){
+document.body.style.transform="scale(1.05)";
+setTimeout(()=>document.body.style.transform="scale(1)",200);
 }
 
-function drop(){
-    let g = document.getElementById("g").value;
-    let i = document.getElementById("i").value;
-    let l = document.getElementById("l").value;
-    let s = document.getElementById("s").value;
-    let lk = document.getElementById("lk").value;
-    let op = document.getElementById("op").value;
-    let ex = document.getElementById("ex").value;
+/* SOM */
+document.body.onclick=()=>{bgVideo.muted=false;bgVideo.play();};
 
-    document.getElementById("output").innerText =
-    `/drop ${g} ${i} ${l} ${s} ${lk} ${op} ${ex}`;
+/* ⚡ RAIO + FLASH */
+let l=lightning.getContext("2d");
+lightning.width=innerWidth;lightning.height=innerHeight;
+
+function lightningFx(){
+l.clearRect(0,0,innerWidth,innerHeight);
+if(Math.random()<0.02){
+l.strokeStyle="white";
+l.beginPath();
+l.moveTo(Math.random()*innerWidth,0);
+l.lineTo(Math.random()*innerWidth,innerHeight);
+l.stroke();
+
+flash.style.opacity=0.8;
+setTimeout(()=>flash.style.opacity=0,100);
+}
+requestAnimationFrame(lightningFx);
+}
+lightningFx();
+
+/* 🌋 LAVA SUBINDO */
+const lavaCanvas=lava;
+const ctx=lavaCanvas.getContext("2d");
+lavaCanvas.width=innerWidth;lavaCanvas.height=innerHeight;
+
+let t=0,altura=120;
+
+function lavaFx(){
+ctx.clearRect(0,0,lavaCanvas.width,lavaCanvas.height);
+
+altura += 0.02; // sobe lentamente
+
+let base=lavaCanvas.height-altura;
+
+ctx.beginPath();
+ctx.moveTo(0,lavaCanvas.height);
+
+for(let x=0;x<=lavaCanvas.width;x+=10){
+let y=base+Math.sin(x*0.01+t)*10;
+ctx.lineTo(x,y);
 }
 
-function cmd(c){
-    document.getElementById("output").innerText = c;
-}
+ctx.lineTo(lavaCanvas.width,lavaCanvas.height);
+ctx.closePath();
 
-function player(c){
-    let nick = document.getElementById("nick2").value;
-    document.getElementById("output").innerText = `${c} ${nick}`;
+let g=ctx.createLinearGradient(0,base,0,lavaCanvas.height);
+g.addColorStop(0,"#ff4500");
+g.addColorStop(0.5,"#ff0000");
+g.addColorStop(1,"#330000");
+
+ctx.fillStyle=g;
+ctx.shadowBlur=40;
+ctx.shadowColor="red";
+ctx.fill();
+
+t+=0.05;
+requestAnimationFrame(lavaFx);
 }
+lavaFx();
+
+/* ✨ MAGIA */
+let m=magic.getContext("2d");
+magic.width=innerWidth;magic.height=innerHeight;
+function magicFx(){
+m.fillStyle="rgba(150,0,255,0.3)";
+m.fillRect(Math.random()*innerWidth,Math.random()*innerHeight,2,2);
+requestAnimationFrame(magicFx);
+}
+magicFx();
+
+/* 🐉 DRAGÃO SOMBRA */
+let d=dragon.getContext("2d");
+dragon.width=innerWidth;dragon.height=innerHeight;
+
+let dx=-300;
+
+function dragonFx(){
+d.clearRect(0,0,innerWidth,innerHeight);
+
+d.fillStyle="rgba(0,0,0,0.3)";
+d.fillRect(dx,100,300,80); // sombra simples
+
+dx+=2;
+if(dx>innerWidth+300) dx=-300;
+
+requestAnimationFrame(dragonFx);
+}
+dragonFx();
+
+/* RANKING */
+async function atualizar(){
+let r=await fetch(API+"/ranking");
+let lista=await r.json();
+
+lista.sort((a,b)=> (b.resets+b.level)-(a.resets+a.level));
+
+let rk="<h3>🏆 Ranking</h3>";
+let mb="<h3>📜 Membros</h3>";
+
+lista.slice(0,100).forEach(p=>{
+rk+=`<p>${p.nick} - ${p.resets}</p>`;
+mb+=`<p>${p.nick} | Lv ${p.level} | ${p.cargo}</p>`;
+});
+
+rankingBox.innerHTML=rk;
+membrosBox.innerHTML=mb;
+}
+setInterval(atualizar,5000);
+atualizar();
 </script>
 
 </body>
